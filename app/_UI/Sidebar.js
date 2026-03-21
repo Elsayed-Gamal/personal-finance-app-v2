@@ -1,0 +1,85 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+
+import OverviewIcon from './icons/OverviewIcon';
+import TransactionsIcon from './icons/TransactionsIcon';
+import PotsIcon from './icons/PotsIcon';
+import RecurringBillsIcon from './icons/RecurringBillsIcon';
+
+function Sidebar() {
+  const pathname = usePathname();
+
+  const navLinkClass = (isActive) =>
+    `flex items-center gap-4 px-8 py-4 w-[90%] rounded-tr-xl rounded-br-xl ${isActive ? 'bg-beige-100 text-grey-900 border-l-4 border-green' : 'text-grey-300'}`;
+
+  const iconClass = (isActive) =>
+    `${isActive ? 'fill-green' : 'fill-grey-300'}`;
+
+  return (
+    <aside
+      className="min-h-screen rounded-tr-xl rounded-br-xl bg-gray-900 relative
+    "
+    >
+      <Image
+        src="/assets/images/logo-large.svg"
+        alt="Logo"
+        className="px-8 py-10"
+        width={186}
+        height={102}
+      />
+      <nav>
+        <ul className="flex list-none flex-col">
+          <li>
+            <Link
+              href="/"
+              className={navLinkClass(pathname === '/')}
+              style={{ font: 'var(--text-preset-3)' }}
+            >
+              <OverviewIcon className={iconClass(pathname === '/')} />
+              Overview
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/transactions"
+              className={navLinkClass(pathname === '/transactions')}
+              style={{ font: 'var(--text-preset-3)' }}
+            >
+              <TransactionsIcon
+                className={iconClass(pathname === '/transactions')}
+              />
+              Transactions
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/pots"
+              className={navLinkClass(pathname === '/pots')}
+              style={{ font: 'var(--text-preset-3)' }}
+            >
+              <PotsIcon className={iconClass(pathname === '/pots')} />
+              Pots
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/recurring-bills"
+              className={navLinkClass(pathname === '/recurring-bills')}
+              style={{ font: 'var(--text-preset-3)' }}
+            >
+              <RecurringBillsIcon
+                className={iconClass(pathname === '/recurring-bills')}
+              />
+              Recurring Bills
+            </Link>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  );
+}
+
+export default Sidebar;

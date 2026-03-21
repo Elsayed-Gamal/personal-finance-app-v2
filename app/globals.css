@@ -1,0 +1,100 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Colors */
+  --color-white: #ffffff;
+  --color-beige-100: #f8f4f0;
+  --color-grey-900: #201f24;
+  --color-grey-500: #696868;
+  --color-grey-300: #b3b3b3;
+  --color-green: #277c78;
+  --color-grey-100: #f2f2f2;
+  --color-yellow: #f2cdac;
+  --color-cyan: #82c9d7;
+  --color-navy: #626070;
+  --color-beige-500: #98908b;
+  --color-red: #c94736;
+  --color-purple: #826cb0;
+  --color-turquoise: #597c7c;
+  --color-brown: #93674f;
+  --color-magenta: #934f6f;
+  --color-blue: #3f82b2;
+  --color-navy-grey: #97a0ac;
+  --color-army-green: #7f9161;
+  --color-gold: #cab361;
+  --color-orange: #be6c49;
+  --color-pink: #af81ba;
+
+  /* Box Shadow */
+  --shadow-drop: 0 4px 24px 0 #00000040;
+
+  /* Font Families */
+  --font-family-public-sans: 'Public Sans', sans-serif;
+
+  /* Font Weights */
+  --font-weight-bold: 700;
+  --font-weight-regular: 400;
+
+  /* Font Sizes */
+  --font-size-0: 12px;
+  --font-size-1: 14px;
+  --font-size-2: 16px;
+  --font-size-3: 20px;
+  --font-size-4: 32px;
+
+  /* Line Heights */
+  --line-height-0: 120%;
+  --line-height-1: 120%;
+  --line-height-2: 150%;
+  --line-height-3: 150%;
+  --line-height-4: 150%;
+  --line-height-5: 150%;
+  --line-height-6: 150%;
+
+  /* Letter Spacing */
+  --letter-spacing-0: 0;
+
+  /* Paragraph Spacing */
+  --paragraph-spacing-0: 1px;
+
+  /* Paragraph Indent */
+  --paragraph-indent-0: 0px;
+
+  /* Text Case */
+  --text-case-none: none;
+
+  /* Text Decoration */
+  --text-decoration-none: none;
+
+  /* Spacing */
+  --spacing-50: 4px;
+  --spacing-100: 8px;
+  --spacing-150: 12px;
+  --spacing-200: 16px;
+  --spacing-250: 20px;
+  --spacing-300: 24px;
+  --spacing-400: 32px;
+  --spacing-500: 40px;
+
+  /* Typography Presets */
+  --text-preset-1: var(--font-weight-bold) 32px/120%
+    var(--font-family-public-sans);
+  --text-preset-2: var(--font-weight-bold) 20px/120%
+    var(--font-family-public-sans);
+  --text-preset-3: var(--font-weight-bold) 16px/150%
+    var(--font-family-public-sans);
+  --text-preset-4: var(--font-weight-regular) 14px/150%
+    var(--font-family-public-sans);
+  --text-preset-4-bold: var(--font-weight-bold) 14px/150%
+    var(--font-family-public-sans);
+  --text-preset-5: var(--font-weight-regular) 12px/150%
+    var(--font-family-public-sans);
+  --text-preset-5-bold: var(--font-weight-bold) 12px/150%
+    var(--font-family-public-sans);
+}
+
+@layer components {
+  .form-input {
+    @apply border-beige-500 text-grey-900 rounded-lg border p-3 outline-none;
+  }
+}
