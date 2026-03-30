@@ -8,6 +8,7 @@ import OverviewIcon from './icons/OverviewIcon';
 import TransactionsIcon from './icons/TransactionsIcon';
 import PotsIcon from './icons/PotsIcon';
 import RecurringBillsIcon from './icons/RecurringBillsIcon';
+import BudgetsIcon from './icons/BudgetsIcon';
 
 function Sidebar() {
   const pathname = usePathname();
@@ -52,6 +53,16 @@ function Sidebar() {
                 className={iconClass(pathname === '/transactions')}
               />
               Transactions
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/budgets"
+              className={navLinkClass(pathname === '/budgets')}
+              style={{ font: 'var(--text-preset-3)' }}
+            >
+              <BudgetsIcon className={iconClass(pathname === '/budgets')} />
+              Budgets
             </Link>
           </li>
           <li>
