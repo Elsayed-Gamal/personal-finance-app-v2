@@ -9,6 +9,9 @@ import TransactionsIcon from './icons/TransactionsIcon';
 import PotsIcon from './icons/PotsIcon';
 import RecurringBillsIcon from './icons/RecurringBillsIcon';
 import BudgetsIcon from './icons/BudgetsIcon';
+import { signOut } from 'next-auth/react';
+import ProfileIcon from './icons/ProfileIcon';
+import SignoutIcon from './icons/SignoutIcon';
 
 function Sidebar() {
   const pathname = usePathname();
@@ -86,6 +89,28 @@ function Sidebar() {
               />
               Recurring Bills
             </Link>
+          </li>
+          <li>
+            <Link
+              href="/profile"
+              className={navLinkClass(pathname === '/profile')}
+              style={{ font: 'var(--text-preset-3)' }}
+            >
+              <ProfileIcon className={iconClass(pathname === '/profile')} />
+              Profile
+            </Link>
+          </li>
+          <li>
+            <button
+              className={navLinkClass(false)}
+              style={{ font: 'var(--text-preset-3)', cursor: 'pointer' }}
+              onClick={() => {
+                signOut();
+              }}
+            >
+              <SignoutIcon className={iconClass(false)} />
+              Sign Out
+            </button>
           </li>
         </ul>
       </nav>
