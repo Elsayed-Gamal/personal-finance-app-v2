@@ -30,7 +30,7 @@ export async function signup(prevState, formData) {
     return {
       errors: {
         email: [
-          'هذا الايميل مستخدم بالفعل. الرجاء تسجيل الدخول أو استخدام ايميل آخر.',
+          'This email is already in use. Please log in or use a different email.',
         ],
       },
     };
@@ -75,7 +75,7 @@ export async function login(prevState, formData) {
       redirect: false,
     });
   } catch {
-    return { error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.' };
+    return { error: 'Incorrect email or password.' };
   }
 
   redirect('/');

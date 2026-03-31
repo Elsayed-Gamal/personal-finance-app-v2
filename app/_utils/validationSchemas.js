@@ -3,22 +3,22 @@ import { z } from 'zod';
 export const loginSchema = z.object({
   email: z
     .string()
-    .min(1, 'البريد الإلكتروني مطلوب')
-    .email('يرجى إدخال بريد إلكتروني صحيح'),
-  password: z.string().min(1, 'كلمة المرور مطلوبة'),
+    .min(1, 'Email is required')
+    .email('Please enter a valid email'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 export const signupSchema = z.object({
   name: z
     .string()
-    .min(1, 'الاسم مطلوب')
-    .max(50, 'الاسم يجب أن يكون أقل من 50 حرف'),
+    .min(1, 'Name is required')
+    .max(50, 'Name must be less than 50 characters'),
   email: z
     .string()
-    .min(1, 'البريد الإلكتروني مطلوب')
-    .email('يرجى إدخال بريد إلكتروني صحيح'),
+    .min(1, 'Email is required')
+    .email('Please enter a valid email'),
   password: z
     .string()
-    .min(1, 'كلمة المرور مطلوبة')
-    .min(8, 'كلمة المرور يجب أن تكون 8 أحرف على الأقل'),
+    .min(1, 'Password is required')
+    .min(8, 'Password must be at least 8 characters'),
 });
