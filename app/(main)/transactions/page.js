@@ -1,7 +1,7 @@
-import TransWrapper from '../_features/transactions/TransactionsWrapper';
-import { getCategories } from '../_services/apiCategories';
-import SearchBar from '../_features/transactions/SearchBar';
-import NavigationProvider from '../_contexts/NavigationContext';
+import TransWrapper from '../../_features/transactions/TransactionsWrapper';
+import { getCategories } from '../../_services/apiCategories';
+import SearchBar from '../../_features/transactions/SearchBar';
+import NavigationProvider from '../../_contexts/NavigationContext';
 
 export const dynamic = 'force-dynamic'; // This page needs to be dynamic because it relies on search params that can change frequently
 

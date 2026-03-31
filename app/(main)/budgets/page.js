@@ -1,5 +1,5 @@
-import BudgetSummary from '../_features/budgets/BudgetSummary';
-import { getBudgets } from '../_services/apiBudgets';
+import BudgetSummary from '../../_features/budgets/BudgetSummary';
+import { getBudgets } from '../../_services/apiBudgets';
 
 async function BudgetsPage() {
   const budgets = await getBudgets();

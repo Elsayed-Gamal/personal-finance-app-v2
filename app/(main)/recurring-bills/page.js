@@ -1,4 +1,4 @@
-import RecurringContainer from '../_features/recurringBills/RecurringContainer';
+import RecurringContainer from '../../_features/recurringBills/RecurringContainer';
 
 function RecurringBillsPage() {
   return (
