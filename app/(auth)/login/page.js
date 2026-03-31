@@ -29,6 +29,14 @@ function LoginPage() {
             name="email"
             className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
           />
+          {state?.errors?.email && (
+            <p
+              className="text-red-600 text-sm"
+              style={{ font: 'var(--text-preset-5)' }}
+            >
+              {state.errors.email[0]}
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-1 mb-8">
           <label
@@ -46,6 +54,14 @@ function LoginPage() {
             name="password"
             className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
           />
+          {state?.errors?.password && (
+            <p
+              className="text-red-600 text-sm"
+              style={{ font: 'var(--text-preset-5)' }}
+            >
+              {state.errors.password[0]}
+            </p>
+          )}
         </div>
         {state?.error && (
           <p

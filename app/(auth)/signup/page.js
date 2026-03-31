@@ -1,13 +1,18 @@
+'use client';
+
 import { signup } from '@/app/_actions/authActions';
 import Link from 'next/link';
+import { useActionState } from 'react';
 
 function SignupPage() {
+  const [state, formAction] = useActionState(signup, null);
+
   return (
     <div className="p-8 flex flex-col gap-8 bg-white rounded-xl w-140 mx-auto">
       <h1 className="text-grey-900" style={{ font: 'var(--text-preset-1)' }}>
         Sign Up
       </h1>
-      <form action={signup}>
+      <form action={formAction}>
         <div className="flex flex-col gap-1 mb-4">
           <label
             htmlFor="name"
@@ -24,6 +29,14 @@ function SignupPage() {
             name="name"
             className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
           />
+          {state?.errors?.name && (
+            <p
+              className="text-red-600 text-sm"
+              style={{ font: 'var(--text-preset-5)' }}
+            >
+              {state.errors.name[0]}
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-1 mb-4">
           <label
@@ -41,6 +54,14 @@ function SignupPage() {
             name="email"
             className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
           />
+          {state?.errors?.email && (
+            <p
+              className="text-red-600 text-sm"
+              style={{ font: 'var(--text-preset-5)' }}
+            >
+              {state.errors.email[0]}
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-1 mb-8">
           <label
@@ -58,6 +79,14 @@ function SignupPage() {
             name="password"
             className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
           />
+          {state?.errors?.password && (
+            <p
+              className="text-red-600 text-sm"
+              style={{ font: 'var(--text-preset-5)' }}
+            >
+              {state.errors.password[0]}
+            </p>
+          )}
         </div>
         <button
           type="submit"
