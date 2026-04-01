@@ -1,6 +1,8 @@
 import { Public_Sans } from 'next/font/google';
 import '../globals.css';
 import Image from 'next/image';
+import { auth } from '@/app/_services/auth';
+import { redirect } from 'next/navigation';
 
 const publicSans = Public_Sans({
   variable: '--font-public-sans',
@@ -12,7 +14,9 @@ export const metadata = {
   description: 'Manage your personal finances effectively.',
 };
 
-export default function AuthLayout({ children }) {
+export default async function AuthLayout({ children }) {
+  const session = await auth();
+  if (session) redirect('/');
   return (
     <html lang="en">
       <body className={`${publicSans.variable} antialiased`}>

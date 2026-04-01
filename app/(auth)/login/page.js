@@ -2,17 +2,18 @@
 
 import { login } from '@/app/_actions/authActions';
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useActionState, useTransition } from 'react';
 
 function LoginPage() {
   const [state, formAction] = useActionState(login, null);
+  const [isPending, startTransition] = useTransition();
 
   return (
     <div className="p-8 flex flex-col gap-8 bg-white rounded-xl w-140 mx-auto">
       <h1 className="text-grey-900" style={{ font: 'var(--text-preset-1)' }}>
         Login
       </h1>
-      <form action={formAction}>
+      <form action={(formData) => startTransition(() => formAction(formData))}>
         <div className="flex flex-col gap-1 mb-4">
           <label
             htmlFor="email"
@@ -28,6 +29,7 @@ function LoginPage() {
             id="email"
             name="email"
             className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
+            disabled={isPending}
           />
           {state?.errors?.email && (
             <p
@@ -53,6 +55,7 @@ function LoginPage() {
             id="password"
             name="password"
             className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
+            disabled={isPending}
           />
           {state?.errors?.password && (
             <p
@@ -73,10 +76,11 @@ function LoginPage() {
         )}
         <button
           type="submit"
-          className="w-full p-4 bg-grey-900 text-white rounded-lg cursor-pointer"
+          disabled={isPending}
+          className="w-full p-4 bg-grey-900 text-white rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ font: 'var(--text-preset-4-bold)' }}
         >
-          Login
+          {isPending ? 'Logging in...' : 'Login'}
         </button>
       </form>
       <div>
