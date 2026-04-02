@@ -12,7 +12,7 @@ export async function createUser(userData) {
 export async function getUserByEmailForVerification(email) {
   const { data, error } = await supabase
     .from('users')
-    .select('id')
+    .select('id, name, email, role')
     .eq('email', email)
     .single();
 
@@ -32,4 +32,28 @@ export async function getUserByEmail(email) {
   }
 
   return data;
+}
+
+export async function updateUserName(userId, newName) {
+  const { error } = await supabase
+    .from('users')
+    .update({ name: newName })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Error updating user name:', error);
+    throw new Error('Failed to update user name');
+  }
+}
+
+export async function updateUserPassword(userId, newPassword) {
+  const { error } = await supabase
+    .from('users')
+    .update({ password: newPassword })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Error updating user password:', error);
+    throw new Error('Failed to update user password');
+  }
 }

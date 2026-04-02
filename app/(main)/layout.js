@@ -1,6 +1,7 @@
 import { Public_Sans } from 'next/font/google';
 import '../globals.css';
 import Sidebar from '../_UI/Sidebar';
+import { SessionProvider } from 'next-auth/react';
 
 const publicSans = Public_Sans({
   variable: '--font-public-sans',
@@ -16,13 +17,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${publicSans.variable} antialiased`}>
-        <div
-          className="bg-beige-100 grid"
-          style={{ gridTemplateColumns: '20% 80%' }}
-        >
-          <Sidebar />
-          <main className="px-10 py-8">{children}</main>
-        </div>
+        <SessionProvider>
+          <div
+            className="bg-beige-100 grid"
+            style={{ gridTemplateColumns: '20% 80%' }}
+          >
+            <Sidebar />
+            <main className="px-10 py-8">{children}</main>
+          </div>
+        </SessionProvider>
       </body>
     </html>
   );

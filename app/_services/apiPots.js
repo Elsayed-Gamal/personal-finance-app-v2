@@ -1,10 +1,14 @@
-import { getBalance, updateBalance } from "./apiBalance";
-import supabase from "./supabase";
+import { getBalance, updateBalance } from './apiBalance';
+import { auth } from './auth';
+import supabase from './supabase';
 
 export async function getPots() {
+  const { user } = await auth();
+
   const { data: pots, error } = await supabase
-    .from("pots")
-    .select("name, target, total, theme");
+    .from('pots')
+    .select('name, target, total, theme, user_id')
+    .eq('user_id', user.id);
 
   if (error) {
     throw new Error(error.message);
@@ -15,9 +19,9 @@ export async function getPots() {
 
 export async function getPotDetails(potName) {
   const { data: potDetails, error } = await supabase
-    .from("pots")
-    .select("name, target, total, theme")
-    .eq("name", potName);
+    .from('pots')
+    .select('name, target, total, theme')
+    .eq('name', potName);
 
   if (error) {
     throw new Error(error.message);
@@ -27,7 +31,7 @@ export async function getPotDetails(potName) {
 }
 
 export async function addPot(pot) {
-  const { data, error } = await supabase.from("pots").insert([pot]).select();
+  const { data, error } = await supabase.from('pots').insert([pot]).select();
 
   if (error) {
     throw new Error(error.message);
@@ -37,10 +41,13 @@ export async function addPot(pot) {
 }
 
 export async function editPot({ potName, updatedFields }) {
+  const { user } = await auth();
+
   const { data, error } = await supabase
-    .from("pots")
+    .from('pots')
     .update(updatedFields)
-    .eq("name", potName)
+    .eq('name', potName)
+    .eq('user_id', user.id)
     .select();
 
   if (error) {
@@ -53,10 +60,15 @@ export async function editPot({ potName, updatedFields }) {
 export async function deletePot(potName) {
   const { total } = await getPotDetails(potName);
   const balance = await getBalance();
+  const { user } = await auth();
 
   await updateBalance(balance + total);
 
-  const { error } = await supabase.from("pots").delete().eq("name", potName);
+  const { error } = await supabase
+    .from('pots')
+    .delete()
+    .eq('name', potName)
+    .eq('user_id', user.id);
 
   if (error) {
     throw new Error(error.message);
@@ -67,9 +79,10 @@ export async function addMoneyToPot({ potName, amount }) {
   const { total, target } = await getPotDetails(potName);
   const balance = await getBalance();
   const newTotal = total + amount;
+  const { user } = await auth();
 
   if (amount > balance) {
-    throw new Error("Insufficient balance to add this amount to the pot.");
+    throw new Error('Insufficient balance to add this amount to the pot.');
   }
 
   if (newTotal > target) {
@@ -77,9 +90,10 @@ export async function addMoneyToPot({ potName, amount }) {
   }
 
   const { error } = await supabase
-    .from("pots")
+    .from('pots')
     .update({ total: newTotal })
-    .eq("name", potName);
+    .eq('name', potName)
+    .eq('user_id', user.id);
 
   await updateBalance(balance - amount);
 
@@ -92,21 +106,23 @@ export async function withdrawMoneyFromPot({ potName, amount }) {
   const { total } = await getPotDetails(potName);
   const balance = await getBalance();
   const newTotal = total - amount;
+  const { user } = await auth();
 
   if (amount > total) {
-    throw new Error("Insufficient funds in the pot to withdraw this amount.");
+    throw new Error('Insufficient funds in the pot to withdraw this amount.');
   }
 
   if (newTotal < 0) {
     throw new Error(
-      "Withdrawing this amount would make the pot total negative.",
+      'Withdrawing this amount would make the pot total negative.',
     );
   }
 
   const { error } = await supabase
-    .from("pots")
+    .from('pots')
     .update({ total: newTotal })
-    .eq("name", potName);
+    .eq('name', potName)
+    .eq('user_id', user.id);
 
   await updateBalance(balance + amount);
 

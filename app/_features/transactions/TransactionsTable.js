@@ -20,12 +20,17 @@ function TransactionsTable({ transactions, count }) {
         <div className="ml-auto">Amount</div>
       </Table.Header>
       <Table.Body>
+        {transactions.length === 0 && (
+          <div className="col-span-4 text-center mt-10">
+            No transactions found.
+          </div>
+        )}
         {transactions.map((transaction) => (
           <Transaction key={transaction.id} transaction={transaction} />
         ))}
       </Table.Body>
       <Table.Footer className="mt-8 flex items-center justify-between gap-4">
-        <Pagination count={count} />
+        {transactions.length > 0 && <Pagination count={count} />}
       </Table.Footer>
     </Table>
   );

@@ -1,9 +1,9 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import { getUserByEmail } from './apiUsers';
+import { getUserByEmail, getUserByEmailForVerification } from './apiUsers';
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth, update } = NextAuth({
   session: {
     strategy: 'jwt',
   },
@@ -38,19 +38,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        const data = await getUserByEmail(user.email);
+    // async jwt({ token, user }) {
+    //   if (user) {
+    //     const data = await getUserByEmail(user.email);
 
-        token.id = data?.id;
-        token.role = data?.role ?? 'USER';
-      }
-      return token;
-    },
+    //     token.id = data?.id;
+    //     token.role = data?.role ?? 'USER';
+    //   }
+    //   return token;
+    // },
 
     async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.role = token.role;
+      const user = await getUserByEmailForVerification(token.email);
+
+      session.user.id = user.id;
+      session.user.role = user.role;
+      session.user.name = user?.name;
+      session.user.email = user?.email;
+
       return session;
     },
   },

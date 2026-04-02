@@ -8,6 +8,7 @@ import {
   editPot as editCurrentPot,
   withdrawMoneyFromPot,
 } from '../_services/apiPots';
+import { auth } from '../_services/auth';
 
 export async function addMoney(potName, amount) {
   await addMoneyToPot({ potName, amount });
@@ -22,11 +23,14 @@ export async function withdrawMoney(potName, amount) {
 }
 
 export async function addPot(potData) {
+  const { user } = await auth();
+
   const newPot = {
     name: potData.get('potName'),
     target: +potData.get('potTarget'),
     total: 0,
     theme: potData.get('potTheme'),
+    user_id: user.id,
   };
 
   await addNewPot(newPot);

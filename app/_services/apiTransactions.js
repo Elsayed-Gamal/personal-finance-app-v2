@@ -1,3 +1,4 @@
+import { auth } from './auth';
 import supabase from './supabase';
 
 export async function getTransactions(
@@ -7,11 +8,18 @@ export async function getTransactions(
   category,
   limit = 10,
 ) {
+  const { user } = await auth();
+
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
   let query = supabase
     .from('transactions')
     .select('name, categories!inner(name), date, amount, avatar, id', {
       count: 'exact',
     })
+    .eq('user_id', user.id)
     .range((page - 1) * limit, page * limit - 1);
 
   if (searchQuery) {

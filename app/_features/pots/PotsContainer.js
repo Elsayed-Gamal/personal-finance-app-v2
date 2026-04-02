@@ -28,7 +28,7 @@ function PotsContainer({ pots, themes }) {
     >
       <Menus>
         <AnimatePresence mode="popLayout">
-          {pots.map((pot) => (
+          {pots?.map((pot) => (
             <motion.div
               key={pot.name}
               variants={itemVariant}
