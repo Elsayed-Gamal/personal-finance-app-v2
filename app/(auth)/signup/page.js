@@ -2,11 +2,25 @@
 
 import { signup } from '@/app/_actions/authActions';
 import Link from 'next/link';
-import { useActionState, useTransition } from 'react';
+import { useActionState, useTransition, useState } from 'react';
+import EyeIcon from '@/app/_UI/icons/EyeIcon';
+import EyeSlashIcon from '@/app/_UI/icons/EyeSlashIcon';
+
+const passwordRequirements = [
+  { label: 'At least 8 characters', regex: /.{8,}/ },
+  { label: 'At least one uppercase letter', regex: /[A-Z]/ },
+  { label: 'At least one lowercase letter', regex: /[a-z]/ },
+  { label: 'At least one number', regex: /[0-9]/ },
+  { label: 'At least one special character', regex: /[^A-Za-z0-9]/ },
+];
 
 function SignupPage() {
   const [state, formAction] = useActionState(signup, null);
   const [isPending, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
+  const [nameValue, setNameValue] = useState('');
+  const [emailValue, setEmailValue] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
 
   return (
     <div className="p-8 flex flex-col gap-8 bg-white rounded-xl w-140 mx-auto">
@@ -28,6 +42,8 @@ function SignupPage() {
             type="text"
             id="name"
             name="name"
+            value={nameValue}
+            onChange={(e) => setNameValue(e.target.value)}
             className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
             disabled={isPending}
           />
@@ -54,6 +70,8 @@ function SignupPage() {
             type="email"
             id="email"
             name="email"
+            value={emailValue}
+            onChange={(e) => setEmailValue(e.target.value)}
             className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
             disabled={isPending}
           />
@@ -76,13 +94,41 @@ function SignupPage() {
           >
             Create Password
           </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className="w-full border border-beige-500 rounded-lg px-3 py-2 focus:outline-none text-grey-500"
-            disabled={isPending}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              name="password"
+              value={passwordValue}
+              onChange={(e) => setPasswordValue(e.target.value)}
+              className="w-full border border-beige-500 rounded-lg px-3 py-2 pr-10 focus:outline-none text-grey-500"
+              disabled={isPending}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-grey-500 hover:text-grey-900"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+            </button>
+          </div>
+          <ul className="mt-2 flex flex-col gap-1">
+            {passwordRequirements.map((req) => (
+              <li
+                key={req.label}
+                className={`text-xs flex items-center gap-1.5 ${
+                  req.regex.test(passwordValue)
+                    ? 'text-green-600'
+                    : 'text-grey-500'
+                }`}
+                style={{ font: 'var(--text-preset-5)' }}
+              >
+                <span>{req.regex.test(passwordValue) ? '✓' : '○'}</span>
+                {req.label}
+              </li>
+            ))}
+          </ul>
           {state?.errors?.password && (
             <p
               className="text-red-600 text-sm"

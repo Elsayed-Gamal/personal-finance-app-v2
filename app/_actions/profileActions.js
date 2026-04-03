@@ -14,7 +14,7 @@ import { auth } from '../_services/auth';
 
 export async function updateName(prevState, formData) {
   const raw = {
-    name: formData.get('name'),
+    name: formData.get('name')?.trim(),
   };
 
   const { user } = await auth();

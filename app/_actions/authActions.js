@@ -11,7 +11,7 @@ import { loginSchema, signupSchema } from '../_utils/validationSchemas';
 
 export async function signup(prevState, formData) {
   const raw = {
-    name: formData.get('name'),
+    name: formData.get('name')?.trim(),
     email: formData.get('email'),
     password: formData.get('password'),
   };

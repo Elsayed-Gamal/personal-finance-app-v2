@@ -1,11 +1,27 @@
 'use client';
 
 import { updatePassword } from '@/app/_actions/profileActions';
-import { useActionState, useTransition } from 'react';
+import { useActionState, useTransition, useState } from 'react';
+import EyeIcon from '@/app/_UI/icons/EyeIcon';
+import EyeSlashIcon from '@/app/_UI/icons/EyeSlashIcon';
+
+const passwordRequirements = [
+  { label: 'At least 8 characters', regex: /.{8,}/ },
+  { label: 'At least one uppercase letter', regex: /[A-Z]/ },
+  { label: 'At least one lowercase letter', regex: /[a-z]/ },
+  { label: 'At least one number', regex: /[0-9]/ },
+  { label: 'At least one special character', regex: /[^A-Za-z0-9]/ },
+];
 
 function UpdatePasswordForm() {
   const [state, formAction] = useActionState(updatePassword, null);
   const [isPending, startTransition] = useTransition();
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [currentPasswordValue, setCurrentPasswordValue] = useState('');
+  const [newPasswordValue, setNewPasswordValue] = useState('');
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState('');
 
   return (
     <div className="bg-white rounded-xl p-8 flex flex-col gap-6">
@@ -14,10 +30,11 @@ function UpdatePasswordForm() {
           Change Password
         </h2>
         <p
-          className="text-grey-500 mt-1"
+          className="text-grey-500 mt-5"
           style={{ font: 'var(--text-preset-4)' }}
         >
-          Make sure your new password is at least 8 characters long.
+          Password must be at least 8 characters with uppercase, lowercase, a
+          number, and a special character.
         </p>
       </div>
 
@@ -33,14 +50,26 @@ function UpdatePasswordForm() {
           >
             Current Password
           </label>
-          <input
-            type="password"
-            id="currentPassword"
-            name="currentPassword"
-            disabled={isPending}
-            className="w-full border border-beige-500 rounded-lg px-3 py-3 focus:outline-none text-grey-900 disabled:opacity-50"
-            style={{ font: 'var(--text-preset-4)' }}
-          />
+          <div className="relative">
+            <input
+              type={showCurrent ? 'text' : 'password'}
+              id="currentPassword"
+              name="currentPassword"
+              value={currentPasswordValue}
+              onChange={(e) => setCurrentPasswordValue(e.target.value)}
+              disabled={isPending}
+              className="w-full border border-beige-500 rounded-lg px-3 py-3 pr-10 focus:outline-none text-grey-900 disabled:opacity-50"
+              style={{ font: 'var(--text-preset-4)' }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowCurrent((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-grey-500 hover:text-grey-900"
+              tabIndex={-1}
+            >
+              {showCurrent ? <EyeSlashIcon /> : <EyeIcon />}
+            </button>
+          </div>
           {state?.errors?.currentPassword && (
             <p
               className="text-red-600"
@@ -59,14 +88,42 @@ function UpdatePasswordForm() {
           >
             New Password
           </label>
-          <input
-            type="password"
-            id="newPassword"
-            name="newPassword"
-            disabled={isPending}
-            className="w-full border border-beige-500 rounded-lg px-3 py-3 focus:outline-none text-grey-900 disabled:opacity-50"
-            style={{ font: 'var(--text-preset-4)' }}
-          />
+          <div className="relative">
+            <input
+              type={showNew ? 'text' : 'password'}
+              id="newPassword"
+              name="newPassword"
+              value={newPasswordValue}
+              onChange={(e) => setNewPasswordValue(e.target.value)}
+              disabled={isPending}
+              className="w-full border border-beige-500 rounded-lg px-3 py-3 pr-10 focus:outline-none text-grey-900 disabled:opacity-50"
+              style={{ font: 'var(--text-preset-4)' }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowNew((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-grey-500 hover:text-grey-900"
+              tabIndex={-1}
+            >
+              {showNew ? <EyeSlashIcon /> : <EyeIcon />}
+            </button>
+          </div>
+          <ul className="mt-2 flex flex-col gap-1">
+            {passwordRequirements.map((req) => (
+              <li
+                key={req.label}
+                className={`text-xs flex items-center gap-1.5 ${
+                  req.regex.test(newPasswordValue)
+                    ? 'text-green-600'
+                    : 'text-grey-500'
+                }`}
+                style={{ font: 'var(--text-preset-5)' }}
+              >
+                <span>{req.regex.test(newPasswordValue) ? '✓' : '○'}</span>
+                {req.label}
+              </li>
+            ))}
+          </ul>
           {state?.errors?.newPassword && (
             <p
               className="text-red-600"
@@ -85,14 +142,26 @@ function UpdatePasswordForm() {
           >
             Confirm New Password
           </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            disabled={isPending}
-            className="w-full border border-beige-500 rounded-lg px-3 py-3 focus:outline-none text-grey-900 disabled:opacity-50"
-            style={{ font: 'var(--text-preset-4)' }}
-          />
+          <div className="relative">
+            <input
+              type={showConfirm ? 'text' : 'password'}
+              id="confirmPassword"
+              name="confirmPassword"
+              value={confirmPasswordValue}
+              onChange={(e) => setConfirmPasswordValue(e.target.value)}
+              disabled={isPending}
+              className="w-full border border-beige-500 rounded-lg px-3 py-3 pr-10 focus:outline-none text-grey-900 disabled:opacity-50"
+              style={{ font: 'var(--text-preset-4)' }}
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirm((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-grey-500 hover:text-grey-900"
+              tabIndex={-1}
+            >
+              {showConfirm ? <EyeSlashIcon /> : <EyeIcon />}
+            </button>
+          </div>
           {state?.errors?.confirmPassword && (
             <p
               className="text-red-600"
