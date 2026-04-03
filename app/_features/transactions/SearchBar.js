@@ -34,6 +34,7 @@ const SearchBar = ({ categories }) => {
     const newSort = e.target.value;
     const params = new URLSearchParams(searchParams);
     params.set('sort', newSort);
+    params.set('page', '1'); // Reset to first page on sort change
     startTransition(() => {
       router.push(`/transactions?${params.toString()}`, { scroll: false });
     });
@@ -43,6 +44,7 @@ const SearchBar = ({ categories }) => {
     const newCategory = e.target.value;
     const params = new URLSearchParams(searchParams);
     params.set('category', newCategory);
+    params.set('page', '1'); // Reset to first page on category change
     startTransition(() => {
       router.push(`/transactions?${params.toString()}`, { scroll: false });
     });
