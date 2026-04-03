@@ -1,19 +1,25 @@
 'use client';
 
 import { updateName } from '@/app/_actions/profileActions';
-import { useActionState, useEffect, useTransition } from 'react';
+import { useActionState, useTransition } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 function UpdateNameForm({ currentName }) {
-  const [state, formAction] = useActionState(updateName, null);
   const [isPending, startTransition] = useTransition();
   const { update } = useSession();
+  const router = useRouter();
 
-  useEffect(() => {
-    if (state?.success && state?.name) {
-      update({ name: state.name });
+  async function handleAction(prevState, formData) {
+    const result = await updateName(prevState, formData);
+    if (result?.success && result?.name) {
+      await update({ name: result.name });
+      router.refresh();
     }
-  }, [state]);
+    return result;
+  }
+
+  const [state, formAction] = useActionState(handleAction, null);
 
   return (
     <div className="bg-white rounded-xl p-8 flex flex-col gap-6">

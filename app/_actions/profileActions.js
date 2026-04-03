@@ -4,14 +4,13 @@ import {
   updateNameSchema,
   updatePasswordSchema,
 } from '@/app/_utils/validationSchemas';
+import bcrypt from 'bcryptjs';
 import {
   getUserByEmail,
   updateUserName,
   updateUserPassword,
 } from '../_services/apiUsers';
 import { auth } from '../_services/auth';
-import { revalidatePath } from 'next/cache';
-import bcrypt from 'bcryptjs';
 
 export async function updateName(prevState, formData) {
   const raw = {
@@ -26,7 +25,6 @@ export async function updateName(prevState, formData) {
   }
 
   await updateUserName(user.id, result.data.name);
-  revalidatePath('/profile');
 
   return { success: 'Name updated successfully.', name: result.data.name };
 }

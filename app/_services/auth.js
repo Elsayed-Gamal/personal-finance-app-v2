@@ -3,7 +3,13 @@ import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { getUserByEmail, getUserByEmailForVerification } from './apiUsers';
 
-export const { handlers, signIn, signOut, auth, update } = NextAuth({
+export const {
+  handlers,
+  signIn,
+  signOut,
+  auth,
+  unstable_update: update,
+} = NextAuth({
   session: {
     strategy: 'jwt',
   },
@@ -38,23 +44,26 @@ export const { handlers, signIn, signOut, auth, update } = NextAuth({
   ],
 
   callbacks: {
-    // async jwt({ token, user }) {
-    //   if (user) {
-    //     const data = await getUserByEmail(user.email);
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        const data = await getUserByEmail(user.email);
 
-    //     token.id = data?.id;
-    //     token.role = data?.role ?? 'USER';
-    //   }
-    //   return token;
-    // },
+        token.id = data?.id;
+        token.role = data?.role ?? 'USER';
+      }
+
+      if (trigger === 'update' && session?.name) {
+        token.name = session.name;
+      }
+
+      return token;
+    },
 
     async session({ session, token }) {
-      const user = await getUserByEmailForVerification(token.email);
-
-      session.user.id = user.id;
-      session.user.role = user.role;
-      session.user.name = user?.name;
-      session.user.email = user?.email;
+      session.user.id = token.id;
+      session.user.role = token.role;
+      session.user.name = token.name;
+      session.user.email = token.email;
 
       return session;
     },
