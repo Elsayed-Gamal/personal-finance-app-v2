@@ -51,6 +51,7 @@ export default async function AuthLayout({ children }) {
                 </p>
               </div>
             </div>
+
             {children}
           </main>
         </div>
