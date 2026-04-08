@@ -3,6 +3,7 @@ import '../globals.css';
 import Image from 'next/image';
 import { auth } from '@/app/_services/auth';
 import { redirect } from 'next/navigation';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const publicSans = Public_Sans({
   variable: '--font-public-sans',
@@ -51,8 +52,8 @@ export default async function AuthLayout({ children }) {
                 </p>
               </div>
             </div>
-
             {children}
+            <SpeedInsights />
           </main>
         </div>
       </body>

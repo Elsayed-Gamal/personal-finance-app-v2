@@ -2,6 +2,7 @@ import { Public_Sans } from 'next/font/google';
 import '../globals.css';
 import Sidebar from '../_UI/Sidebar';
 import { SessionProvider } from 'next-auth/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const publicSans = Public_Sans({
   variable: '--font-public-sans',
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
             <main className="px-10 py-8">{children}</main>
           </div>
         </SessionProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
