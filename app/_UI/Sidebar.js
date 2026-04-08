@@ -9,12 +9,15 @@ import TransactionsIcon from './icons/TransactionsIcon';
 import PotsIcon from './icons/PotsIcon';
 import RecurringBillsIcon from './icons/RecurringBillsIcon';
 import BudgetsIcon from './icons/BudgetsIcon';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import ProfileIcon from './icons/ProfileIcon';
 import SignoutIcon from './icons/SignoutIcon';
+import AdminIcon from './icons/AdminIcon';
 
 function Sidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'ADMIN';
 
   const navLinkClass = (isActive) =>
     `flex items-center gap-4 px-8 py-4 w-[90%] rounded-tr-xl rounded-br-xl ${isActive ? 'bg-beige-100 text-grey-900 border-l-4 border-green' : 'text-grey-300'}`;
@@ -100,6 +103,18 @@ function Sidebar() {
               Profile
             </Link>
           </li>
+          {isAdmin && (
+            <li>
+              <Link
+                href="/admin"
+                className={navLinkClass(pathname === '/admin')}
+                style={{ font: 'var(--text-preset-3)' }}
+              >
+                <AdminIcon className={iconClass(pathname === '/admin')} />
+                Admin Panel
+              </Link>
+            </li>
+          )}
           <li>
             <button
               className={navLinkClass(false)}

@@ -1,5 +1,40 @@
 import supabase from './supabase';
 
+export async function getAllUsers() {
+  const { data, error } = await supabase
+    .from('users')
+    .select('id, name, email, role, created_at')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching all users:', error);
+    throw new Error('Failed to fetch users');
+  }
+
+  return data;
+}
+
+export async function adminUpdateUser(userId, updates) {
+  const { error } = await supabase
+    .from('users')
+    .update(updates)
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Error updating user:', error);
+    throw new Error('Failed to update user');
+  }
+}
+
+export async function adminDeleteUser(userId) {
+  const { error } = await supabase.from('users').delete().eq('id', userId);
+
+  if (error) {
+    console.error('Error deleting user:', error);
+    throw new Error('Failed to delete user');
+  }
+}
+
 export async function createUser(userData) {
   const { error } = await supabase.from('users').insert(userData);
 

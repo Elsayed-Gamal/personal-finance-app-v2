@@ -4,12 +4,22 @@ import {
   createUser,
   getUserByEmailForVerification,
 } from '../_services/apiUsers';
+import { isRegistrationOpen } from '../_services/apiSettings';
 import bcrypt from 'bcryptjs';
 import { signIn } from '../_services/auth';
 import { redirect } from 'next/navigation';
 import { loginSchema, signupSchema } from '../_utils/validationSchemas';
 
 export async function signup(prevState, formData) {
+  const registrationOpen = await isRegistrationOpen();
+  if (!registrationOpen) {
+    return {
+      errors: {
+        general: ['Registration is currently closed. Please try again later.'],
+      },
+    };
+  }
+
   const raw = {
     name: formData.get('name')?.trim(),
     email: formData.get('email'),
