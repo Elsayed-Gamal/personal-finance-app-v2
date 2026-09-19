@@ -1,36 +1,135 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Personal Finance App
 
-## Getting Started
+تطبيق لإدارة المال الشخصي مبني باستخدام Next.js وSupabase. يوفّر المشروع واجهة لإدارة المعاملات والميزانيات والـ Pots والفواتير المتكررة، بالإضافة إلى المصادقة وإدارة المستخدمين من خلال لوحة Admin.
 
-First, run the development server:
+> **حالة المشروع:** نسخة MVP قيد التطوير. الواجهات الأساسية موجودة، لكن المشروع يحتاج إلى استكمال عزل بيانات المستخدمين، العمليات المالية الذرية، الاختبارات، وتوثيق مخطط قاعدة البيانات قبل استخدامه في الإنتاج.
+
+## المزايا الحالية
+
+- تسجيل الدخول والتسجيل باستخدام NextAuth Credentials و`bcryptjs`.
+- التحقق من المدخلات باستخدام Zod.
+- عرض المعاملات مع البحث والترتيب والتصفية حسب التصنيف وPagination.
+- عرض الميزانيات وحساب المصروف حسب التصنيف.
+- إنشاء وتعديل وحذف Pots وإضافة الأموال وسحبها.
+- عرض الفواتير المتكررة.
+- تحديث اسم المستخدم وكلمة المرور.
+- لوحة إدارة للمستخدمين تشمل الإنشاء والتعديل والحذف وتغيير حالة التسجيل.
+- واجهة مبنية باستخدام Tailwind CSS وRecharts وMotion.
+
+## المتطلبات
+
+- Node.js 20 أو أحدث.
+- npm.
+- مشروع Supabase.
+
+## التشغيل المحلي
+
+1. ثبّت الاعتماديات:
+
+   ```bash
+   npm install
+   ```
+
+2. أنشئ ملف `.env.local` في جذر المشروع:
+
+   ```env
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_KEY=your-server-side-supabase-key
+   AUTH_SECRET=replace-with-a-long-random-secret
+   ```
+
+   يستخدم التطبيق حاليًا `SUPABASE_URL` و`SUPABASE_KEY` مباشرة في [app/\_services/supabase.js](app/_services/supabase.js). يجب عدم نشر مفتاح Supabase ذي الصلاحيات المرتفعة أو وضعه داخل كود العميل.
+
+3. شغّل بيئة التطوير:
+
+   ```bash
+   npm run dev
+   ```
+
+4. افتح [http://localhost:3000](http://localhost:3000).
+
+## أوامر المشروع
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev      # تشغيل بيئة التطوير
+npm run lint     # فحص ESLint
+npm run build    # إنشاء نسخة الإنتاج
+npm run start    # تشغيل نسخة الإنتاج بعد build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+لا توجد حاليًا حزمة اختبارات أو أمر `test` مضاف إلى `package.json`.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## إعداد قاعدة البيانات
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+يعتمد التطبيق على الجداول وView التالية في Supabase:
 
-## Learn More
+- `users`
+- `transactions`
+- `categories`
+- `budgets`
+- `pots`
+- `themes`
+- `settings`
+- `balance_snapshots`
+- `unique_recurring_bills` كـ View للفواتير المتكررة
 
-To learn more about Next.js, take a look at the following resources:
+يجب أن تحتوي `users` على الأقل على الحقول المستخدمة في التطبيق:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `id`
+- `name`
+- `email`
+- `password`
+- `role` بقيمة `USER` أو `ADMIN`
+- `created_at`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+مخطط SQL وسياسات Row Level Security غير موجودين حاليًا داخل المستودع. لذلك يجب تجهيز قاعدة البيانات والسياسات يدويًا أو إضافة migrations قبل نشر المشروع.
 
-## Deploy on Vercel
+## بنية المشروع
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```text
+app/
+  (auth)/             صفحات تسجيل الدخول والتسجيل
+  (main)/             صفحات التطبيق الرئيسية
+  _actions/           Server Actions لتعديل البيانات
+  _contexts/          React Contexts
+  _features/          مكونات كل نطاق وظيفي
+  _services/          طبقة الوصول إلى Supabase والمصادقة
+  _UI/                مكونات الواجهة المشتركة والأيقونات
+  _utils/             أدوات التحقق والمساعدات
+  api/                Route Handlers
+proxy.js              حماية المسارات وإعادة التوجيه
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ملاحظات مهمة قبل الإنتاج
+
+هذه النقاط معروفة وتحتاج إلى معالجة:
+
+1. يجب تقييد الميزانيات والفواتير والرصيد حسب `user_id`. بعض الاستعلامات الحالية عامة، والرصيد يستخدم سجلًا ثابتًا بالمعرّف `1`.
+2. يجب تحويل تعديلات الـ Pots والرصيد إلى عملية ذرية داخل قاعدة البيانات حتى لا يتغير الرصيد إذا فشل تحديث الـ Pot.
+3. يجب استخدام `pot_id` بدل اسم الـ Pot عند التعديل والحذف والإيداع والسحب.
+4. يجب تفعيل فحص دور Admin في middleware، مع الإبقاء على التحقق الخادمي داخل Server Actions وصفحة الإدارة.
+5. حساب الميزانيات يستخدم حاليًا فترة ثابتة في `apiBudgets.js`، ويجب استبدالها بالفترة الحالية وحسابات المستخدم الحالي.
+6. صفحة Overview الحالية هي Placeholder وتحتاج إلى ربطها ببيانات الرصيد والمصروفات والميزانيات والـ Pots والفواتير.
+7. يجب إضافة اختبارات لعزل بيانات المستخدمين، صلاحيات Admin، عمليات الإيداع والسحب، Pagination، والتحقق من المدخلات.
+
+## النشر
+
+يمكن نشر تطبيق Next.js على Vercel أو أي بيئة تدعم Node.js. قبل النشر:
+
+1. أضف متغيرات البيئة نفسها إلى إعدادات بيئة الإنتاج.
+2. نفّذ `npm run lint` و`npm run build`.
+3. طبّق مخطط قاعدة البيانات وسياسات RLS.
+4. أنشئ مستخدم Admin بطريقة آمنة، ولا تعتمد على إدخال دور Admin من واجهة عامة.
+5. اختبر عزل البيانات باستخدام حسابين مختلفين.
+
+## التقنية المستخدمة
+
+- Next.js `16`
+- React `19`
+- NextAuth `5 beta`
+- Supabase JS
+- Tailwind CSS `4`
+- Zod
+- Recharts
+- Motion
+- bcryptjs
