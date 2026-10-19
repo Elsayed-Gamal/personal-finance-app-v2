@@ -1,57 +1,49 @@
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath } from "next/cache";
 import {
   addMoneyToPot,
   addPot as addNewPot,
   deletePot as deleteCurrentPot,
   editPot as editCurrentPot,
   withdrawMoneyFromPot,
-} from '../_services/apiPots';
-import { auth } from '../_services/auth';
+} from "../_services/apiPots";
 
-export async function addMoney(potName, amount) {
-  await addMoneyToPot({ potName, amount });
-
-  revalidatePath('/pots');
+async function runMutation(mutate) {
+  try {
+    await mutate();
+  } catch (error) {
+    return {
+      error: error.message || "Unable to save your changes. Please try again.",
+    };
+  }
+  revalidatePath("/pots");
+  revalidatePath("/");
+  return { success: true };
 }
 
-export async function withdrawMoney(potName, amount) {
-  await withdrawMoneyFromPot({ potName, amount });
-
-  revalidatePath('/pots');
-}
-
-export async function addPot(potData) {
-  const { user } = await auth();
-
-  const newPot = {
-    name: potData.get('potName'),
-    target: +potData.get('potTarget'),
-    total: 0,
-    theme: potData.get('potTheme'),
-    user_id: user.id,
+function potFields(formData) {
+  return {
+    name: formData.get("potName"),
+    target: Number(formData.get("potTarget")),
+    theme: formData.get("potTheme"),
   };
-
-  await addNewPot(newPot);
-
-  revalidatePath('/pots');
 }
 
-export async function editPot(potName, formData) {
-  const updatedFields = {
-    name: formData.get('potName'),
-    target: +formData.get('potTarget'),
-    theme: formData.get('potTheme'),
-  };
-
-  await editCurrentPot({ potName, updatedFields });
-
-  revalidatePath('/pots');
+export async function addMoney(potId, amount) {
+  return runMutation(() => addMoneyToPot({ potId, amount }));
 }
-
-export async function deletePot(potName) {
-  await deleteCurrentPot(potName);
-
-  revalidatePath('/pots');
+export async function withdrawMoney(potId, amount) {
+  return runMutation(() => withdrawMoneyFromPot({ potId, amount }));
+}
+export async function addPot(formData) {
+  return runMutation(() => addNewPot(potFields(formData)));
+}
+export async function editPot(potId, formData) {
+  return runMutation(() =>
+    editCurrentPot({ potId, updatedFields: potFields(formData) }),
+  );
+}
+export async function deletePot(potId) {
+  return runMutation(() => deleteCurrentPot(potId));
 }

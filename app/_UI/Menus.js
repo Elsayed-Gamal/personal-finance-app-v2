@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { calcPosition } from '../_utils/helpers';
-import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'motion/react';
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { calcPosition } from "../_utils/helpers";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "motion/react";
+import useHydrated from "../_hooks/useHydrated";
 
 const MenusContext = createContext();
 
@@ -69,11 +70,7 @@ function List({ id, children }) {
     useContext(MenusContext);
   const isOpen = openId === id;
   const listRef = useRef();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -88,11 +85,11 @@ function List({ id, children }) {
     }
 
     if (isOpen) {
-      document.addEventListener('click', handleClickOutside);
+      document.addEventListener("click", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, [activeToggle, close, isOpen]);
 
@@ -105,13 +102,13 @@ function List({ id, children }) {
     }
 
     if (isOpen) {
-      window.addEventListener('scroll', handleScroll, true);
-      window.addEventListener('resize', handleScroll);
+      window.addEventListener("scroll", handleScroll, true);
+      window.addEventListener("resize", handleScroll);
     }
 
     return () => {
-      window.removeEventListener('scroll', handleScroll, true);
-      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener("scroll", handleScroll, true);
+      window.removeEventListener("resize", handleScroll);
     };
   }, [isOpen, activeToggle, setPosition]);
 
@@ -126,7 +123,7 @@ function List({ id, children }) {
             top: position.y,
             right: position.x,
             boxShadow:
-              '0px 4px 24px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)',
+              "0px 4px 24px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)",
           }}
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 91 }}
@@ -141,7 +138,7 @@ function List({ id, children }) {
   );
 }
 
-function Button({ type = 'submit', onClick, children }) {
+function Button({ type = "submit", onClick, children, disabled = false }) {
   const { close } = useContext(MenusContext);
   const handleClick = () => {
     close();
@@ -151,8 +148,10 @@ function Button({ type = 'submit', onClick, children }) {
   return (
     <li>
       <button
-        className={`${type === 'delete' ? 'text-red' : 'text-grey-900'} w-full cursor-pointer text-left`}
-        style={{ font: 'var(--text-preset-4)' }}
+        type="button"
+        disabled={disabled}
+        className={`${type === "delete" ? "text-red" : "text-grey-900"} w-full cursor-pointer text-left disabled:cursor-not-allowed disabled:opacity-50`}
+        style={{ font: "var(--text-preset-4)" }}
         onClick={handleClick}
       >
         {children}

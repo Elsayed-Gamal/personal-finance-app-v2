@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { useNavigation } from '@/app/_contexts/NavigationContext';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useNavigation } from "@/app/_contexts/NavigationContext";
+import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 const PAGE_SIZE = 10;
 
@@ -17,7 +18,7 @@ function getPageNumbers(current, total) {
 
   for (let i = 0; i < sorted.length; i++) {
     if (i > 0 && sorted[i] - sorted[i - 1] > 1) {
-      result.push('...');
+      result.push("...");
     }
     result.push(sorted[i]);
   }
@@ -25,16 +26,16 @@ function getPageNumbers(current, total) {
   return result;
 }
 
-function Pagination({ count }) {
+function Pagination({ count, currentPage }) {
   const { startTransition } = useNavigation();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const page = +searchParams.get('page') || 1;
-  const pageCount = Math.ceil(count / PAGE_SIZE);
+  const page = currentPage ?? (+searchParams.get("page") || 1);
+  const pageCount = Math.max(1, Math.ceil(count / PAGE_SIZE));
 
   function goToPage(pg) {
     const params = new URLSearchParams(searchParams);
-    params.set('page', pg);
+    params.set("page", pg);
     startTransition(() => {
       router.push(`/transactions?${params.toString()}`, { scroll: false });
     });
@@ -56,27 +57,34 @@ function Pagination({ count }) {
         onClick={prevPage}
         disabled={page === 1}
         className="border-beige-500 text-grey-900 flex cursor-pointer items-center gap-4 rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
-        style={{ font: 'var(--text-preset-4)' }}
+        style={{ font: "var(--text-preset-4)" }}
       >
-        <img src="/assets/images/icon-caret-left.svg" alt="" />
+        <Image
+          src="/assets/images/icon-caret-left.svg"
+          alt=""
+          width={6}
+          height={11}
+        />
         Prev
       </button>
       <div className="flex items-center gap-2">
         {pages.map((pg, i) =>
-          pg === '...' ? (
+          pg === "..." ? (
             <span key={`dots-${i}`} className="px-2 text-grey-500">
               ...
             </span>
           ) : (
             <button
               key={pg}
+              aria-label={`Page ${pg}`}
+              aria-current={pg === page ? "page" : undefined}
               onClick={() => goToPage(pg)}
               className={`${
                 pg === page
-                  ? 'bg-grey-900 border-grey-900 text-white'
-                  : 'text-grey-900'
+                  ? "bg-grey-900 border-grey-900 text-white"
+                  : "text-grey-900"
               } border-beige-500 h-10 w-10 cursor-pointer rounded-lg border`}
-              style={{ font: 'var(--text-preset-4)' }}
+              style={{ font: "var(--text-preset-4)" }}
             >
               {pg}
             </button>
@@ -85,12 +93,17 @@ function Pagination({ count }) {
       </div>
       <button
         onClick={nextPage}
-        disabled={page === pageCount}
+        disabled={page >= pageCount}
         className="border-beige-500 text-grey-900 flex cursor-pointer items-center gap-4 rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
-        style={{ font: 'var(--text-preset-4)' }}
+        style={{ font: "var(--text-preset-4)" }}
       >
         Next
-        <img src="/assets/images/icon-caret-right.svg" alt="" />
+        <Image
+          src="/assets/images/icon-caret-right.svg"
+          alt=""
+          width={6}
+          height={11}
+        />
       </button>
     </>
   );

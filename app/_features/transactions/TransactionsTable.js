@@ -1,39 +1,25 @@
 'use client';
-
-import Table from '../../_UI/Table';
 import Transaction from './Transaction';
 import Pagination from './Pagination';
 import { useNavigation } from '@/app/_contexts/NavigationContext';
-import Loading from '@/app/_UI/Loading';
 
-function TransactionsTable({ transactions, count }) {
+export default function TransactionsTable({ transactions, count, page, categories, balanceReady }) {
   const { isPending } = useNavigation();
-
-  if (isPending) return <Loading />;
-
-  return (
-    <Table columns="3fr 1fr 2fr 1fr">
-      <Table.Header>
-        <div>Recipient / Sender</div>
-        <div>Category</div>
-        <div>Transaction Date</div>
-        <div className="ml-auto">Amount</div>
-      </Table.Header>
-      <Table.Body>
-        {transactions.length === 0 && (
-          <div className="col-span-4 text-center mt-10">
-            No transactions found.
-          </div>
-        )}
-        {transactions.map((transaction) => (
-          <Transaction key={transaction.id} transaction={transaction} />
-        ))}
-      </Table.Body>
-      <Table.Footer className="mt-8 flex items-center justify-between gap-4">
-        {transactions.length > 0 && <Pagination count={count} />}
-      </Table.Footer>
-    </Table>
-  );
+  return <div aria-busy={isPending} className={isPending ? 'opacity-60' : ''}>
+    <div className="overflow-x-auto">
+      <table className="w-full text-left text-sm">
+        <caption className="sr-only">Your income and expense transactions</caption>
+        <thead className="border-b border-grey-100 text-xs text-grey-500"><tr>
+          <th scope="col" className="py-4 pr-4">Recipient / sender</th>
+          <th scope="col" className="hidden py-4 pr-4 md:table-cell">Category</th>
+          <th scope="col" className="hidden py-4 pr-4 sm:table-cell">Date</th>
+          <th scope="col" className="py-4 text-right">Amount</th>
+          <th scope="col" className="py-4 pl-4 text-right">Actions</th>
+        </tr></thead>
+        <tbody>{transactions.map(transaction => <Transaction key={transaction.id} transaction={transaction} categories={categories} balanceReady={balanceReady} />)}</tbody>
+      </table>
+    </div>
+    {transactions.length === 0 && <p className="py-12 text-center text-grey-500">No transactions found. Add a transaction or change your filters.</p>}
+    {count > 0 && <div className="mt-8 flex flex-wrap items-center justify-between gap-4"><Pagination count={count} currentPage={page} /></div>}
+  </div>;
 }
-
-export default TransactionsTable;

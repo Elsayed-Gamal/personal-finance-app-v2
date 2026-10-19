@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Menus from '@/app/_UI/Menus';
-import { AnimatePresence, motion } from 'motion/react';
-import Pot from './Pot';
+import Menus from "@/app/_UI/Menus";
+import { AnimatePresence, motion } from "motion/react";
+import Pot from "./Pot";
 
 const parentVariant = {
   hidden: {},
@@ -18,7 +18,7 @@ const itemVariant = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
 };
 
-function PotsContainer({ pots, themes }) {
+function PotsContainer({ pots, themes, balance }) {
   return (
     <motion.div
       className="grid grid-cols-[repeat(auto-fit,minmax(450px,1fr))] gap-6"
@@ -30,14 +30,14 @@ function PotsContainer({ pots, themes }) {
         <AnimatePresence mode="popLayout">
           {pots?.map((pot) => (
             <motion.div
-              key={pot.name}
+              key={pot.id}
               variants={itemVariant}
               layout
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0, scale: 0.9 }}
             >
-              <Pot pot={pot} themes={themes} />
+              <Pot pot={pot} themes={themes} balance={balance} />
             </motion.div>
           ))}
         </AnimatePresence>

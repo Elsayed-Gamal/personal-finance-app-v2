@@ -98,3 +98,21 @@
     @apply border-beige-500 text-grey-900 rounded-lg border p-3 outline-none;
   }
 }
+
+@layer components {
+  .button-primary {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg bg-grey-900 px-4 py-3 text-sm font-bold text-white transition hover:bg-grey-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .button-secondary {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg border border-beige-500 px-3 py-2 text-sm font-bold transition hover:bg-beige-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .button-danger {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg bg-red px-4 py-3 text-sm font-bold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .field-label {
+    @apply flex min-w-0 flex-col gap-2 text-sm font-bold text-grey-500;
+  }
+  .form-input {
+    @apply min-w-0 w-full bg-white font-normal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:opacity-60;
+  }
+}

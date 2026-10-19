@@ -1,28 +1,20 @@
-'use server';
+"use server";
 
-import bcrypt from 'bcryptjs';
-import { revalidatePath } from 'next/cache';
-import { auth } from '../_services/auth';
+import bcrypt from "bcryptjs";
+import { revalidatePath } from "next/cache";
+import { requireAdmin } from "../_services/authorization";
 import {
   getAllUsers,
   createUser,
   adminUpdateUser,
   adminDeleteUser,
   getUserByEmailForVerification,
-} from '../_services/apiUsers';
+} from "../_services/apiUsers";
 import {
   adminCreateUserSchema,
   adminEditUserSchema,
-} from '../_utils/validationSchemas';
-import { setSetting } from '../_services/apiSettings';
-
-async function requireAdmin() {
-  const session = await auth();
-  if (!session?.user || session.user.role !== 'ADMIN') {
-    throw new Error('Unauthorized');
-  }
-  return session.user;
-}
+} from "../_utils/validationSchemas";
+import { setSetting } from "../_services/apiSettings";
 
 export async function getUsers() {
   await requireAdmin();
@@ -33,10 +25,10 @@ export async function adminCreate(prevState, formData) {
   await requireAdmin();
 
   const raw = {
-    name: formData.get('name')?.trim(),
-    email: formData.get('email')?.trim(),
-    password: formData.get('password'),
-    role: formData.get('role'),
+    name: formData.get("name")?.trim(),
+    email: formData.get("email")?.trim(),
+    password: formData.get("password"),
+    role: formData.get("role"),
   };
 
   const result = adminCreateUserSchema.safeParse(raw);
@@ -48,24 +40,24 @@ export async function adminCreate(prevState, formData) {
 
   const existing = await getUserByEmailForVerification(email);
   if (existing) {
-    return { errors: { email: ['This email is already in use.'] } };
+    return { errors: { email: ["This email is already in use."] } };
   }
 
   const hashedPassword = await bcrypt.hash(password, 12);
   await createUser({ name, email, password: hashedPassword, role });
 
-  revalidatePath('/admin');
-  return { success: 'User created successfully.' };
+  revalidatePath("/admin");
+  return { success: "User created successfully." };
 }
 
 export async function adminEdit(userId, prevState, formData) {
   await requireAdmin();
 
   const raw = {
-    name: formData.get('name')?.trim(),
-    email: formData.get('email')?.trim(),
-    role: formData.get('role'),
-    newPassword: formData.get('newPassword') || undefined,
+    name: formData.get("name")?.trim(),
+    email: formData.get("email")?.trim(),
+    role: formData.get("role"),
+    newPassword: formData.get("newPassword") || undefined,
   };
 
   const result = adminEditUserSchema.safeParse(raw);
@@ -82,18 +74,18 @@ export async function adminEdit(userId, prevState, formData) {
 
   await adminUpdateUser(userId, updates);
 
-  revalidatePath('/admin');
-  return { success: 'User updated successfully.' };
+  revalidatePath("/admin");
+  return { success: "User updated successfully." };
 }
 
 export async function adminDelete(userId) {
   await requireAdmin();
   await adminDeleteUser(userId);
-  revalidatePath('/admin');
+  revalidatePath("/admin");
 }
 
 export async function toggleRegistration(currentValue) {
   await requireAdmin();
-  await setSetting('registration_open', String(!currentValue));
-  revalidatePath('/admin');
+  await setSetting("registration_open", String(!currentValue));
+  revalidatePath("/admin");
 }

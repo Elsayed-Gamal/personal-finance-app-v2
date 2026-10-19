@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   cloneElement,
@@ -7,18 +7,21 @@ import {
   useEffect,
   useRef,
   useState,
-} from 'react';
-import { createPortal } from 'react-dom';
-import CloseModalIcon from './icons/CloseModalIcon';
-import { AnimatePresence, motion } from 'motion/react';
+  useCallback,
+  useId,
+} from "react";
+import { createPortal } from "react-dom";
+import CloseModalIcon from "./icons/CloseModalIcon";
+import { AnimatePresence, motion } from "motion/react";
+import useHydrated from "../_hooks/useHydrated";
 
 export const ModalContext = createContext();
 
 function Modal({ children }) {
-  const [openName, setOpenName] = useState('');
+  const [openName, setOpenName] = useState("");
 
-  const close = () => setOpenName('');
-  const open = (name) => setOpenName(name);
+  const close = useCallback(() => setOpenName(""), []);
+  const open = useCallback((name) => setOpenName(name), []);
 
   return (
     <ModalContext.Provider value={{ openName, open, close }}>
@@ -38,25 +41,48 @@ function Open({ children, opens }) {
 function Content({ children, name }) {
   const { openName, close } = useContext(ModalContext);
   const content = useRef();
+  const titleId = useId();
   const isOpen = openName === name;
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (!isOpen || !mounted) return;
+    const previouslyFocused = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const heading = content.current?.querySelector('h2');
+    if (heading) heading.id = titleId;
+    const focusable = 'button:not([disabled]), input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]';
+    const firstInput = content.current?.querySelector('input:not([type="hidden"]):not([disabled]), select:not([disabled])');
+    (firstInput ?? content.current)?.focus();
 
-  useEffect(() => {
-    if (!isOpen) return;
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') { event.preventDefault(); close(); return; }
+      if (event.key !== 'Tab') return;
+      const elements = [...(content.current?.querySelectorAll(focusable) ?? [])];
+      const first = elements[0];
+      const last = elements.at(-1);
+      if (!first) { event.preventDefault(); content.current?.focus(); return; }
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === content.current)) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === content.current)) {
+        event.preventDefault(); first.focus();
+      }
+    }
 
     function handleClickOutside(e) {
       if (content.current && !content.current.contains(e.target)) close();
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      if (previouslyFocused?.isConnected) previouslyFocused.focus();
     };
-  }, [close, isOpen]);
+  }, [close, isOpen, mounted, titleId]);
 
   if (!mounted) return null; // ← لا تُرنِّد شيئًا على السيرفر
 
@@ -64,22 +90,23 @@ function Content({ children, name }) {
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex h-full w-full items-center justify-center scroll-auto bg-black/50"
+          className="fixed inset-0 z-50 flex h-full w-full items-center justify-center bg-black/50 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="relative w-140 rounded-xl bg-white p-8"
+            className="relative max-h-[90dvh] w-full max-w-140 overflow-y-auto rounded-xl bg-white p-6 outline-none sm:p-8"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            tabIndex={-1}
             ref={content}
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
           >
-            <CloseModalIcon
-              className="absolute top-9.5 right-9.5 cursor-pointer"
-              onClick={close}
-            />
+            <button type="button" aria-label="Close dialog" className="absolute top-6 right-6 rounded p-1 focus-visible:outline-2 focus-visible:outline-green" onClick={close}><CloseModalIcon /></button>
             {children}
           </motion.div>
         </motion.div>

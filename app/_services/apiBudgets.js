@@ -1,43 +1,42 @@
+import 'server-only';
 import supabase from './supabase';
+import { requireUser } from './authorization';
+import { monthRange } from '../_utils/financialDates';
+import {
+  budgetSchema,
+  parseFinancial,
+  recordIdSchema,
+} from '../_utils/financialSchemas';
 
-export async function getBudgets() {
-  const { data: budgets, error } = await supabase
-    .from('budgets')
-    .select('categories!inner(name, theme), maximum')
-    .order('maximum', { ascending: true });
+export async function getBudgets(month) {
+  const user = await requireUser();
+  const { start, end } = monthRange(month);
+  const { data, error } = await supabase.rpc('get_owned_budget_summary', {
+    p_user_id: user.id,
+    p_start: start,
+    p_end: end,
+  });
+  if (error) throw new Error('Unable to load your budgets. Please try again.');
+  return data;
+}
 
-  if (error) {
-    console.error('Supabase error:', error);
-    throw new Error(error.message || 'Failed to fetch budgets');
-  }
-
-  const categoryNames = [...new Set(budgets.map((b) => b.categories.name))];
-
-  const { data: transactions, error: txError } = await supabase
-    .from('transactions')
-    .select('amount, categories!inner(name)')
-    .in('categories.name', categoryNames)
-    .gte('date', '2024-08-01')
-    .lt('date', '2024-09-01')
-    .lt('amount', 0);
-
-  if (txError) {
-    console.error('Supabase error:', txError);
-    throw new Error(txError.message || 'Failed to fetch transactions');
-  }
-
-  const spentByCategory = {};
-  for (const tx of transactions) {
-    const cat = tx.categories.name;
-    spentByCategory[cat] = (spentByCategory[cat] || 0) + Math.abs(tx.amount);
-  }
-
-  const finalBudgets = budgets.map((budget) => ({
-    name: budget.categories.name,
-    maximum: budget.maximum,
-    spent: spentByCategory[budget.categories.name] || 0,
-    color: budget.categories.theme,
-  }));
-
-  return finalBudgets;
+export async function saveBudget(operation, budgetId, input) {
+  const user = await requireUser();
+  if (!['create', 'edit', 'delete'].includes(operation))
+    throw new Error('Invalid operation.');
+  const id = parseFinancial(recordIdSchema, budgetId);
+  const fields =
+    operation === 'delete' ? null : parseFinancial(budgetSchema, input);
+  let query = supabase.from('budgets');
+  if (operation === 'create')
+    query = query.insert({ ...fields, id, user_id: user.id });
+  else if (operation === 'edit')
+    query = query.update(fields).eq('id', id).eq('user_id', user.id);
+  else query = query.delete().eq('id', id).eq('user_id', user.id);
+  const { data, error } = await query.select('id').maybeSingle();
+  if (error?.code === '23505')
+    throw new Error('You already have a budget for this category.');
+  if (error?.code === '23503') throw new Error('Choose a valid category.');
+  if (error) throw new Error('Unable to save the budget. Please try again.');
+  if (!data) throw new Error('Budget not found.');
 }

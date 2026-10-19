@@ -1,18 +1,23 @@
-'use client';
+"use client";
 
-import { addPot, editPot } from '@/app/_actions/potsActions';
-import { ModalContext } from '@/app/_UI/Modal';
-import { useContext, useState } from 'react';
+import { addPot, editPot } from "@/app/_actions/potsActions";
+import { ModalContext } from "@/app/_UI/Modal";
+import { useContext, useState } from "react";
 
 function AddEditPotForm({
   type,
+  potId,
   potName: initialPotName,
   potTarget: initialPotTarget,
   potTheme: initialPotTheme,
   themes,
   startTransition,
+  isPending,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState("");
+  const [name, setName] = useState(initialPotName ?? "");
+  const [target, setTarget] = useState(initialPotTarget ?? "");
   const [activeThemeHex, setActiveThemeHex] = useState(initialPotTheme ?? null);
   const { close } = useContext(ModalContext);
 
@@ -20,17 +25,24 @@ function AddEditPotForm({
     (theme) => theme.hex_code === activeThemeHex,
   );
 
-  const editPotWithName = editPot.bind(null, initialPotName);
+  const editPotWithId = editPot.bind(null, potId);
 
   const handleSubmit = async (formData) => {
     startTransition(async () => {
-      if (type === 'edit') {
-        await editPotWithName(formData);
-      } else if (type === 'add') {
-        await addPot(formData);
+      setError("");
+      try {
+        const result =
+          type === "edit"
+            ? await editPotWithId(formData)
+            : await addPot(formData);
+        if (result?.error) {
+          setError(result.error);
+          return;
+        }
+        close();
+      } catch {
+        setError("Unable to save your pot. Please try again.");
       }
-
-      close();
     });
   };
 
@@ -40,7 +52,7 @@ function AddEditPotForm({
       action={handleSubmit}
     >
       <div>
-        <label htmlFor="pot-name" style={{ font: 'var(--text-preset-5-bold)' }}>
+        <label htmlFor="pot-name" style={{ font: "var(--text-preset-5-bold)" }}>
           Pot Name
         </label>
         <input
@@ -49,8 +61,11 @@ function AddEditPotForm({
           id="pot-name"
           className="form-input"
           placeholder="e.g. Rainy Days"
-          defaultValue={initialPotName}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
           maxLength={30}
+          required
+          disabled={isPending}
         />
 
         {/* <span className="self-end" style={{ font: 'var(--text-preset-5)' }}>
@@ -60,7 +75,7 @@ function AddEditPotForm({
       <div>
         <label
           htmlFor="pot-target"
-          style={{ font: 'var(--text-preset-5-bold)' }}
+          style={{ font: "var(--text-preset-5-bold)" }}
         >
           Target
         </label>
@@ -70,13 +85,18 @@ function AddEditPotForm({
           name="potTarget"
           className="form-input"
           placeholder="e.g. 2000"
-          defaultValue={initialPotTarget}
+          value={target}
+          onChange={(event) => setTarget(event.target.value)}
+          min="0.01"
+          step="0.01"
+          required
+          disabled={isPending}
         />
       </div>
       <div className="relative">
         <label
           htmlFor="pot-theme"
-          style={{ font: 'var(--text-preset-5-bold)' }}
+          style={{ font: "var(--text-preset-5-bold)" }}
         >
           Theme
         </label>
@@ -84,12 +104,13 @@ function AddEditPotForm({
           type="hidden"
           id="pot-theme"
           name="potTheme"
-          value={activeThemeHex}
+          value={activeThemeHex ?? ""}
         />
         <button
           type="button"
           className="form-input flex w-full items-center gap-3 text-left"
           onClick={() => setIsOpen(!isOpen)}
+          disabled={isPending}
         >
           {selectedTheme ? (
             <>
@@ -100,7 +121,7 @@ function AddEditPotForm({
               {selectedTheme.color}
             </>
           ) : (
-            'Select a theme'
+            "Select a theme"
           )}
         </button>
 
@@ -109,6 +130,7 @@ function AddEditPotForm({
             {themes?.map((theme) => (
               <button
                 type="button"
+                disabled={isPending}
                 key={theme.color}
                 className="hover:bg-grey-100 text-grey-900 flex w-full items-center gap-3 p-3 text-left"
                 onClick={() => {
@@ -126,11 +148,17 @@ function AddEditPotForm({
           </div>
         )}
       </div>
+      {error && (
+        <p role="alert" className="text-red">
+          {error}
+        </p>
+      )}
       <button
+        disabled={isPending}
         className="bg-grey-900 w-full cursor-pointer rounded-lg p-4 text-white"
-        style={{ font: 'var(--text-preset-4-bold)' }}
+        style={{ font: "var(--text-preset-4-bold)" }}
       >
-        {type === 'add' ? 'Add Pot' : 'Save Changes'}
+        {isPending ? "Saving..." : type === "add" ? "Add Pot" : "Save Changes"}
       </button>
     </form>
   );
