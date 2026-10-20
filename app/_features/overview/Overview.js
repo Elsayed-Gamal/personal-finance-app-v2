@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import BalanceSetupNotice from "../../_UI/BalanceSetupNotice";
 import MonthFilter from "../../_UI/MonthFilter";
 import BudgetChart from "../budgets/BudgetChart";
 import { recurringSummary } from "./recurringSummary";
@@ -119,15 +120,7 @@ export default function Overview({
           </section>
         ))}
       </div>
-      {balance === null && (
-        <p
-          role="status"
-          className="rounded-lg border border-yellow bg-white p-4 text-sm"
-        >
-          Your opening balance has not been set up. Contact the administrator to
-          confirm it before changing transactions or moving money.
-        </p>
-      )}
+      {balance === null && <BalanceSetupNotice />}
       <div className={styles.content}>
         <section className={`${styles.card} ${styles.pots}`}>
           <CardHeading title="Pots" href="/pots" />

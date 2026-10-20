@@ -4,6 +4,7 @@ import SearchBar from '../../_features/transactions/SearchBar';
 import TransactionEditor from '../../_features/transactions/TransactionEditor';
 import { getBalance } from '../../_services/apiBalance';
 import NavigationProvider from '../../_contexts/NavigationContext';
+import BalanceSetupNotice from '../../_UI/BalanceSetupNotice';
 
 export const dynamic = 'force-dynamic'; // This page needs to be dynamic because it relies on search params that can change frequently
 
@@ -30,15 +31,7 @@ async function TransactionsPage({ searchParams }) {
           balanceReady={balance !== null}
         />
       </div>
-      {balance === null && (
-        <p
-          role="status"
-          className="rounded-xl border border-yellow bg-white p-4 text-sm"
-        >
-          Your balance is not set up yet. You can view your transactions, but
-          contact the administrator before adding, editing or deleting them.
-        </p>
-      )}
+      {balance === null && <BalanceSetupNotice />}
       <div className="rounded-xl bg-white p-5 sm:p-8">
         <NavigationProvider>
           <SearchBar categories={categories} />

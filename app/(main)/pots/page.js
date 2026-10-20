@@ -3,6 +3,7 @@ import PotsHeader from "../../_features/pots/PotsHeader";
 import { getPots } from "../../_services/apiPots";
 import { getThemes } from "../../_services/apiThemes";
 import { getBalance } from "../../_services/apiBalance";
+import BalanceSetupNotice from "../../_UI/BalanceSetupNotice";
 
 async function PotsPage() {
   const [pots, themes, balance] = await Promise.all([
@@ -15,15 +16,9 @@ async function PotsPage() {
     <div className="mx-auto w-full max-w-[1060px]">
       <PotsHeader themes={themes} />
       {balance === null && (
-        <p
-          role="status"
-          className="mb-6 rounded-xl border border-yellow bg-white p-4 text-grey-900"
-        >
-          Your balance is not set up yet. You can manage your pots, but adding
-          or withdrawing money and deleting pots with savings are unavailable
-          until your opening balance is confirmed. Contact the administrator for
-          help.
-        </p>
+        <div className="mb-6">
+          <BalanceSetupNotice />
+        </div>
       )}
       {pots.length === 0 ? (
         <section className="rounded-xl bg-white p-10 text-center">
