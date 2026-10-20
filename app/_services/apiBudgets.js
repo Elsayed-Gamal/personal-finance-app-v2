@@ -20,6 +20,34 @@ export async function getBudgets(month) {
   return data;
 }
 
+export async function getBudgetSpending(month) {
+  const user = await requireUser();
+  const { start, end } = monthRange(month);
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('id, name, avatar, amount, date, category_id')
+    .eq('user_id', user.id)
+    .lt('amount', 0)
+    .gte('date', start)
+    .lt('date', end)
+    .order('date', { ascending: false })
+    .order('id', { ascending: false })
+    .limit(300);
+
+  if (error)
+    throw new Error('Unable to load recent budget spending. Please try again.');
+
+  const spendingByCategory = {};
+  for (const transaction of data ?? []) {
+    if (!transaction.category_id) continue;
+    const categorySpending = spendingByCategory[transaction.category_id] ?? [];
+    if (categorySpending.length < 3) categorySpending.push(transaction);
+    spendingByCategory[transaction.category_id] = categorySpending;
+  }
+
+  return spendingByCategory;
+}
+
 export async function saveBudget(operation, budgetId, input) {
   const user = await requireUser();
   if (!['create', 'edit', 'delete'].includes(operation))
@@ -37,6 +65,9 @@ export async function saveBudget(operation, budgetId, input) {
   if (error?.code === '23505')
     throw new Error('You already have a budget for this category.');
   if (error?.code === '23503') throw new Error('Choose a valid category.');
-  if (error) throw new Error('Unable to save the budget. Please try again.');
+  if (error)
+    throw new Error(
+      'Unable to save the budget. Please try again.' + error.message,
+    );
   if (!data) throw new Error('Budget not found.');
 }

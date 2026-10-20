@@ -34,7 +34,9 @@ function BudgetChart({
   return (
     <div
       className={
-        overview ? "relative h-60 w-60 shrink-0" : "relative w-full min-w-0"
+        overview
+          ? "relative h-60 w-60 shrink-0"
+          : "relative h-[280px] w-[280px] max-w-full shrink-0"
       }
       role={overview ? "img" : undefined}
       aria-label={
@@ -44,29 +46,17 @@ function BudgetChart({
       }
     >
       <PieChart
-        width={overview ? 240 : undefined}
-        height={overview ? 240 : undefined}
-        margin={overview ? { top: 0, right: 0, bottom: 0, left: 0 } : undefined}
-        style={
-          overview
-            ? undefined
-            : {
-                width: "100%",
-                height: "100%",
-                maxWidth: "500px",
-                maxHeight: "80vh",
-                aspectRatio: 1,
-              }
-        }
-        responsive={!overview}
+        width={overview ? 240 : 280}
+        height={overview ? 240 : 280}
+        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
       >
         <Pie
           data={data}
           dataKey="value"
           cx="50%"
           cy="50%"
-          outerRadius={overview ? 105 : "70%"}
-          innerRadius={overview ? 81 : "50%"}
+          outerRadius={overview ? 105 : 94}
+          innerRadius={overview ? 81 : 81}
           stroke="none"
           isAnimationActive={!overview}
           startAngle={90}
@@ -81,8 +71,8 @@ function BudgetChart({
           dataKey="value"
           cx="50%"
           cy="50%"
-          innerRadius={overview ? 93.75 : "60%"}
-          outerRadius={overview ? 120 : "80%"}
+          innerRadius={overview ? 93.75 : 94}
+          outerRadius={overview ? 120 : 120}
           paddingAngle={0}
           stroke="none"
           isAnimationActive={!overview}
@@ -114,7 +104,7 @@ function BudgetChart({
               : { font: "var(--text-preset-1)" }),
           }}
         >
-          {overview ? money.format(totalSpent) : `$${totalSpent}`}
+          {money.format(totalSpent)}
         </p>
         <p
           className="text-grey-500"
@@ -129,7 +119,7 @@ function BudgetChart({
               : { font: "var(--text-preset-5)" }),
           }}
         >
-          of {overview ? money.format(maximum) : `$${maximum}`} limit
+          of {money.format(maximum)} limit
         </p>
       </div>
     </div>

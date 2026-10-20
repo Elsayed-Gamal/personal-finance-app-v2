@@ -1,43 +1,45 @@
-import { Fragment } from 'react';
-import BudgetChart from './BudgetChart';
+import { Fragment } from "react";
+import BudgetChart from "./BudgetChart";
 
 function BudgetSummary({ budgets }) {
   return (
-    <div className="flex flex-col gap-8 bg-white p-8 rounded-xl ">
-      <BudgetChart budgets={budgets} />
-      <div>
+    <aside className="flex flex-col items-center gap-8 rounded-xl bg-white p-5 sm:flex-row sm:items-center sm:p-8 xl:sticky xl:top-8 xl:flex-col xl:items-stretch">
+      <div className="flex flex-1 justify-center">
+        <BudgetChart budgets={budgets} />
+      </div>
+      <div className="w-full flex-1">
         <h2
           className="text-grey-900 mb-6"
-          style={{ font: 'var(--text-preset-2)' }}
+          style={{ font: "var(--text-preset-2)" }}
         >
           Spending Summary
         </h2>
         <div className="flex flex-col gap-4">
           {budgets.map((budget) => (
             <Fragment key={budget.name}>
-              <div className="flex justify-between items-center h-5.25 gap-4">
-                <div className="flex gap-4">
+              <div className="flex min-h-5 items-center justify-between gap-4">
+                <div className="flex min-w-0 items-stretch gap-4">
                   <span
-                    className="inline-block h-5.25 w-1 rounded-lg"
+                    className="inline-block w-1 shrink-0 rounded-lg"
                     style={{ backgroundColor: budget.color }}
                   ></span>
                   <p
-                    className="text-grey-500"
-                    style={{ font: 'var(--text-preset-4)' }}
+                    className="truncate text-grey-500"
+                    style={{ font: "var(--text-preset-4)" }}
                   >
                     {budget.name}
                   </p>
                 </div>
-                <div className="flex items-center">
+                <div className="flex shrink-0 items-center">
                   <span
                     className="text-grey-900"
-                    style={{ font: 'var(--text-preset-3)' }}
+                    style={{ font: "var(--text-preset-3)" }}
                   >
                     ${budget.spent.toFixed(2)}&nbsp;
                   </span>
                   <span
                     className="text-grey-500"
-                    style={{ font: 'var(--text-preset-5)' }}
+                    style={{ font: "var(--text-preset-5)" }}
                   >
                     of ${budget.maximum.toFixed(2)}
                   </span>
@@ -50,7 +52,7 @@ function BudgetSummary({ budgets }) {
           ))}
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 

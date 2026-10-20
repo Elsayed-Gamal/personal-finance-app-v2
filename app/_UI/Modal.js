@@ -38,7 +38,7 @@ function Open({ children, opens }) {
   });
 }
 
-function Content({ children, name }) {
+function Content({ children, name, closeButtonClassName = "" }) {
   const { openName, close } = useContext(ModalContext);
   const content = useRef();
   const titleId = useId();
@@ -49,24 +49,47 @@ function Content({ children, name }) {
     if (!isOpen || !mounted) return;
     const previouslyFocused = document.activeElement;
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const heading = content.current?.querySelector('h2');
+    document.body.style.overflow = "hidden";
+    const heading = content.current?.querySelector("h2");
     if (heading) heading.id = titleId;
-    const focusable = 'button:not([disabled]), input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]';
-    const firstInput = content.current?.querySelector('input:not([type="hidden"]):not([disabled]), select:not([disabled])');
+    const focusable =
+      'button:not([disabled]), input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]';
+    const firstInput = content.current?.querySelector(
+      'input:not([type="hidden"]):not([disabled]), select:not([disabled])',
+    );
     (firstInput ?? content.current)?.focus();
 
     function handleKeyDown(event) {
-      if (event.key === 'Escape') { event.preventDefault(); close(); return; }
-      if (event.key !== 'Tab') return;
-      const elements = [...(content.current?.querySelectorAll(focusable) ?? [])];
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const elements = [
+        ...(content.current?.querySelectorAll(focusable) ?? []),
+      ];
       const first = elements[0];
       const last = elements.at(-1);
-      if (!first) { event.preventDefault(); content.current?.focus(); return; }
-      if (event.shiftKey && (document.activeElement === first || document.activeElement === content.current)) {
-        event.preventDefault(); last.focus();
-      } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === content.current)) {
-        event.preventDefault(); first.focus();
+      if (!first) {
+        event.preventDefault();
+        content.current?.focus();
+        return;
+      }
+      if (
+        event.shiftKey &&
+        (document.activeElement === first ||
+          document.activeElement === content.current)
+      ) {
+        event.preventDefault();
+        last.focus();
+      } else if (
+        !event.shiftKey &&
+        (document.activeElement === last ||
+          document.activeElement === content.current)
+      ) {
+        event.preventDefault();
+        first.focus();
       }
     }
 
@@ -75,10 +98,10 @@ function Content({ children, name }) {
     }
 
     document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
       if (previouslyFocused?.isConnected) previouslyFocused.focus();
     };
@@ -106,7 +129,14 @@ function Content({ children, name }) {
             animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
           >
-            <button type="button" aria-label="Close dialog" className="absolute top-6 right-6 rounded p-1 focus-visible:outline-2 focus-visible:outline-green" onClick={close}><CloseModalIcon /></button>
+            <button
+              type="button"
+              aria-label="Close dialog"
+              className={`absolute top-6 right-6 rounded p-1 focus-visible:outline-2 focus-visible:outline-green ${closeButtonClassName}`}
+              onClick={close}
+            >
+              <CloseModalIcon />
+            </button>
             {children}
           </motion.div>
         </motion.div>
