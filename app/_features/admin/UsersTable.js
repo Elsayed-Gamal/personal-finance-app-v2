@@ -6,7 +6,7 @@ import UserRow from './UserRow';
 
 function UsersTable({ users, currentUserId }) {
   return (
-    <div className="rounded-xl bg-white p-8">
+    <section className="rounded-xl bg-white p-5 sm:p-8">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-grey-900" style={{ font: 'var(--text-preset-2)' }}>
           All Users
@@ -24,30 +24,30 @@ function UsersTable({ users, currentUserId }) {
           <thead>
             <tr className="border-beige-500/30 border-b">
               <th
-                className="text-grey-500 pb-3 text-left pr-4"
+                className="pb-3 pr-4 text-left text-grey-500"
                 style={{ font: 'var(--text-preset-5-bold)' }}
               >
                 User
               </th>
               <th
-                className="text-grey-500 pb-3 text-left pr-4"
+                className="hidden pb-3 pr-4 text-left text-grey-500 md:table-cell"
                 style={{ font: 'var(--text-preset-5-bold)' }}
               >
                 Email
               </th>
               <th
-                className="text-grey-500 pb-3 text-left pr-4"
+                className="hidden pb-3 pr-4 text-left text-grey-500 sm:table-cell"
                 style={{ font: 'var(--text-preset-5-bold)' }}
               >
                 Role
               </th>
               <th
-                className="text-grey-500 pb-3 text-left pr-4"
+                className="hidden pb-3 pr-4 text-left text-grey-500 lg:table-cell"
                 style={{ font: 'var(--text-preset-5-bold)' }}
               >
                 Joined
               </th>
-              <th className="pb-3 text-right">
+              <th className="w-px pb-3 text-right">
                 <span className="sr-only">Actions</span>
               </th>
             </tr>
@@ -76,7 +76,7 @@ function UsersTable({ users, currentUserId }) {
           </p>
         )}
       </div>
-    </div>
+    </section>
   );
 }
 

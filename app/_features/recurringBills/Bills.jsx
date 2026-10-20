@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useNavigation } from '@/app/_contexts/NavigationContext';
-import { formatCurrency } from '@/app/_utils/helpers';
+import { formatCurrency, normalizeImageSrc } from '@/app/_utils/helpers';
 import { formatOrdinal, getRecurringBillStatus } from './recurringBills';
 
 const sorts = {
@@ -79,7 +79,7 @@ function Bills({ recurringBills, now }) {
             onChange={(event) => setQuery(event.target.value)}
             disabled={isPending}
             placeholder="Search bills"
-            className="w-full rounded-lg border border-beige-500 bg-white py-3 pr-12 pl-5 text-grey-900 outline-none placeholder:text-beige-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
+            className="w-full rounded-lg border border-beige-500 bg-white py-3 pr-12 pl-5 text-grey-900 outline-none placeholder:text-grey-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
           />
           <Image
             src="/assets/images/icon-search.svg"
@@ -156,12 +156,15 @@ function Bills({ recurringBills, now }) {
               <div
                 role="row"
                 key={bill.name}
-                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 border-b border-grey-100 py-5 last:border-0 sm:grid-cols-[minmax(0,1.7fr)_minmax(100px,1fr)_minmax(90px,.7fr)] sm:px-4"
+                className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 border-b border-grey-100 py-5 first:pt-0 last:border-0 last:pb-0 sm:grid-cols-[minmax(0,1.7fr)_minmax(100px,1fr)_minmax(90px,.7fr)] sm:px-4 sm:first:pt-5 sm:last:pb-5"
               >
-                <div role="cell" className="flex min-w-0 items-center gap-4">
+                <div
+                  role="cell"
+                  className="col-span-2 flex min-w-0 items-center gap-4 sm:col-span-1"
+                >
                   {bill.avatar ? (
                     <Image
-                      src={bill.avatar}
+                      src={normalizeImageSrc(bill.avatar)}
                       alt=""
                       width={32}
                       height={32}
@@ -170,7 +173,7 @@ function Bills({ recurringBills, now }) {
                   ) : (
                     <span
                       aria-hidden="true"
-                      className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-beige-100 font-bold text-sm sm:flex"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-beige-100 text-sm font-bold"
                     >
                       {bill.name.slice(0, 1).toUpperCase()}
                     </span>
@@ -184,18 +187,20 @@ function Bills({ recurringBills, now }) {
                 </div>
                 <div
                   role="cell"
-                  className={`col-start-1 mt-2 pl-12 sm:col-auto sm:mt-0 sm:pl-0 ${status === 'paid' ? 'text-green' : status === 'due-soon' ? 'text-red' : 'text-grey-500'}`}
+                  className={`col-start-1 mt-2 flex min-w-0 items-center gap-2 sm:col-auto sm:mt-0 ${status === 'paid' ? 'text-green' : 'text-grey-500'}`}
                   style={{ font: 'var(--text-preset-5)' }}
                 >
-                  Monthly - {formatOrdinal(bill.day)}
+                  <span className="whitespace-nowrap">
+                    Monthly - {formatOrdinal(bill.day)}
+                  </span>
+                  <StatusIcon status={status} />
                 </div>
                 <div
                   role="cell"
-                  className={`row-span-2 row-start-1 flex items-center justify-end gap-2 sm:row-auto ${status === 'due-soon' ? 'text-red' : 'text-grey-900'}`}
+                  className={`col-start-2 row-start-2 mt-2 flex items-center justify-end sm:col-auto sm:row-auto sm:mt-0 ${status === 'due-soon' ? 'text-red' : 'text-grey-900'}`}
                   style={{ font: 'var(--text-preset-4-bold)' }}
                 >
                   {formatCurrency(bill.amount)}
-                  <StatusIcon status={status} />
                 </div>
               </div>
             );

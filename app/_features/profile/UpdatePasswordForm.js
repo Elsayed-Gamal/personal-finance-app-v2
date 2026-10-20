@@ -58,14 +58,14 @@ function UpdatePasswordForm() {
               value={currentPasswordValue}
               onChange={(e) => setCurrentPasswordValue(e.target.value)}
               disabled={isPending}
-              className="w-full border border-beige-500 rounded-lg px-3 py-3 pr-10 focus:outline-none text-grey-900 disabled:opacity-50"
+              className="w-full rounded-lg border border-beige-500 px-3 py-3 pr-12 text-grey-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:opacity-50"
               style={{ font: 'var(--text-preset-4)' }}
             />
             <button
               type="button"
               onClick={() => setShowCurrent((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-grey-500 hover:text-grey-900"
-              tabIndex={-1}
+              className="absolute top-1/2 right-1 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded text-grey-500 hover:text-grey-900 focus-visible:outline-2 focus-visible:outline-green"
+              aria-label={showCurrent ? 'Hide current password' : 'Show current password'}
             >
               {showCurrent ? <EyeSlashIcon /> : <EyeIcon />}
             </button>
@@ -96,14 +96,14 @@ function UpdatePasswordForm() {
               value={newPasswordValue}
               onChange={(e) => setNewPasswordValue(e.target.value)}
               disabled={isPending}
-              className="w-full border border-beige-500 rounded-lg px-3 py-3 pr-10 focus:outline-none text-grey-900 disabled:opacity-50"
+              className="w-full rounded-lg border border-beige-500 px-3 py-3 pr-12 text-grey-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:opacity-50"
               style={{ font: 'var(--text-preset-4)' }}
             />
             <button
               type="button"
               onClick={() => setShowNew((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-grey-500 hover:text-grey-900"
-              tabIndex={-1}
+              className="absolute top-1/2 right-1 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded text-grey-500 hover:text-grey-900 focus-visible:outline-2 focus-visible:outline-green"
+              aria-label={showNew ? 'Hide new password' : 'Show new password'}
             >
               {showNew ? <EyeSlashIcon /> : <EyeIcon />}
             </button>
@@ -150,14 +150,14 @@ function UpdatePasswordForm() {
               value={confirmPasswordValue}
               onChange={(e) => setConfirmPasswordValue(e.target.value)}
               disabled={isPending}
-              className="w-full border border-beige-500 rounded-lg px-3 py-3 pr-10 focus:outline-none text-grey-900 disabled:opacity-50"
+              className="w-full rounded-lg border border-beige-500 px-3 py-3 pr-12 text-grey-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:opacity-50"
               style={{ font: 'var(--text-preset-4)' }}
             />
             <button
               type="button"
               onClick={() => setShowConfirm((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-grey-500 hover:text-grey-900"
-              tabIndex={-1}
+              className="absolute top-1/2 right-1 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded text-grey-500 hover:text-grey-900 focus-visible:outline-2 focus-visible:outline-green"
+              aria-label={showConfirm ? 'Hide password confirmation' : 'Show password confirmation'}
             >
               {showConfirm ? <EyeSlashIcon /> : <EyeIcon />}
             </button>
@@ -181,7 +181,7 @@ function UpdatePasswordForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full p-4 bg-grey-900 text-white rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="button-primary w-full p-4"
           style={{ font: 'var(--text-preset-4-bold)' }}
         >
           {isPending ? 'Updating...' : 'Update Password'}

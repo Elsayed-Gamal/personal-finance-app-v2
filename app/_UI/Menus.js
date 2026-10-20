@@ -36,7 +36,7 @@ function Menus({ children }) {
   );
 }
 
-function Toggle({ children, id }) {
+function Toggle({ children, id, "aria-label": ariaLabel }) {
   const { open, openId, close, setPosition, setActiveToggle } =
     useContext(MenusContext);
   const toggleRef = useRef();
@@ -54,10 +54,12 @@ function Toggle({ children, id }) {
 
   return (
     <button
-      className="h-3 cursor-pointer"
+      type="button"
+      className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
       onClick={handleClick}
       aria-expanded={isOpen}
-      aria-haspopup="true"
+      aria-haspopup="menu"
+      aria-label={ariaLabel}
       ref={toggleRef}
     >
       {children}
@@ -65,7 +67,7 @@ function Toggle({ children, id }) {
   );
 }
 
-function List({ id, children }) {
+function List({ id, children, className = "w-36" }) {
   const { openId, position, close, activeToggle, setPosition } =
     useContext(MenusContext);
   const isOpen = openId === id;
@@ -118,16 +120,17 @@ function List({ id, children }) {
     <AnimatePresence>
       {isOpen && (
         <motion.ul
-          className="fixed z-10 flex w-[114px] flex-col justify-between rounded-lg bg-white p-4 px-5 py-3"
+          role="menu"
+          className={`fixed z-50 flex flex-col justify-between rounded-lg bg-white px-5 py-3 ${className}`}
           style={{
             top: position.y,
             right: position.x,
             boxShadow:
               "0px 4px 24px rgba(0, 0, 0, 0.25), 0px 4px 4px rgba(0, 0, 0, 0.25)",
           }}
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 91 }}
-          exit={{ opacity: 0, height: 0 }}
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
           ref={listRef}
         >
           {children}
@@ -149,8 +152,9 @@ function Button({ type = "submit", onClick, children, disabled = false }) {
     <li>
       <button
         type="button"
+        role="menuitem"
         disabled={disabled}
-        className={`${type === "delete" ? "text-red" : "text-grey-900"} w-full cursor-pointer text-left disabled:cursor-not-allowed disabled:opacity-50`}
+        className={`${type === "delete" ? "text-red" : "text-grey-900"} w-full cursor-pointer rounded py-1 text-left focus-visible:outline-2 focus-visible:outline-green disabled:cursor-not-allowed disabled:opacity-50`}
         style={{ font: "var(--text-preset-4)" }}
         onClick={handleClick}
       >

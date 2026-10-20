@@ -14,12 +14,12 @@ export default function TransactionsTable({ transactions, count, page, categorie
           <th scope="col" className="hidden py-4 pr-4 md:table-cell">Category</th>
           <th scope="col" className="hidden py-4 pr-4 sm:table-cell">Date</th>
           <th scope="col" className="py-4 text-right">Amount</th>
-          <th scope="col" className="py-4 pl-4 text-right">Actions</th>
+          <th scope="col" className="w-px whitespace-nowrap py-4 pl-6 text-right sm:pl-12">Actions</th>
         </tr></thead>
         <tbody>{transactions.map(transaction => <Transaction key={transaction.id} transaction={transaction} categories={categories} balanceReady={balanceReady} />)}</tbody>
       </table>
     </div>
     {transactions.length === 0 && <p className="py-12 text-center text-grey-500">No transactions found. Add a transaction or change your filters.</p>}
-    {count > 0 && <div className="mt-8 flex flex-wrap items-center justify-between gap-4"><Pagination count={count} currentPage={page} /></div>}
+    {count > 0 && <div className="mt-8"><Pagination count={count} currentPage={page} /></div>}
   </div>;
 }

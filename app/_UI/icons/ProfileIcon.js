@@ -7,6 +7,9 @@ export default function ProfileIcon({ className }) {
       width="24"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      stroke="currentColor"
+      strokeWidth="1.5"
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"

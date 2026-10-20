@@ -165,7 +165,7 @@ function AddWithdrawMoney({ type, pot, balance }) {
               type="number"
               min="0.01"
               step="0.01"
-              className="border-beige-500 mt-1 w-full rounded-lg border px-5 py-3 outline-none"
+              className="mt-1 w-full rounded-lg border border-beige-500 px-5 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
               placeholder="0"
               style={{ font: "var(--text-preset-4)" }}
               value={addAmount}
@@ -174,7 +174,7 @@ function AddWithdrawMoney({ type, pot, balance }) {
             />
           </div>
           <button
-            className="bg-grey-900 mt-4 h-13.25 w-full cursor-pointer rounded-lg p-4 text-white"
+            className="button-primary mt-4 h-13.25 w-full p-4"
             style={{ font: "var(--text-preset-4-bold)" }}
             onClick={() =>
               type === "add"

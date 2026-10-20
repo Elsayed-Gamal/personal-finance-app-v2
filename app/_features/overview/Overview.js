@@ -3,6 +3,7 @@ import Link from "next/link";
 import MonthFilter from "../../_UI/MonthFilter";
 import BudgetChart from "../budgets/BudgetChart";
 import { recurringSummary } from "./recurringSummary";
+import { normalizeImageSrc } from "../../_utils/helpers";
 import styles from "./Overview.module.css";
 
 const money = new Intl.NumberFormat("en-US", {
@@ -187,7 +188,7 @@ export default function Overview({
                   <div className={styles.transactionIdentity}>
                     {transaction.avatar ? (
                       <Image
-                        src={transaction.avatar}
+                        src={normalizeImageSrc(transaction.avatar)}
                         width={40}
                         height={40}
                         unoptimized
@@ -263,7 +264,7 @@ export default function Overview({
             {[
               ["Paid Bills", bills.paid, "var(--color-green)"],
               ["Total Upcoming", bills.upcoming, "var(--color-yellow)"],
-              ["Due Soon", bills.dueSoon, "var(--color-cyan)"],
+              ["Due Soon", bills.dueSoon, "var(--color-red)"],
             ].map(([title, amount, color]) => (
               <div
                 className={styles.bill}

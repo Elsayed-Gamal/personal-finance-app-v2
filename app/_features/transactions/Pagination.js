@@ -52,11 +52,11 @@ function Pagination({ count, currentPage }) {
   const pages = getPageNumbers(page, pageCount);
 
   return (
-    <>
+    <nav aria-label="Transaction pages" className="flex w-full items-center justify-between gap-2">
       <button
         onClick={prevPage}
         disabled={page === 1}
-        className="border-beige-500 text-grey-900 flex cursor-pointer items-center gap-4 rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-10 min-w-10 cursor-pointer items-center justify-center gap-4 rounded-lg border border-beige-500 px-3 text-grey-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
         style={{ font: "var(--text-preset-4)" }}
       >
         <Image
@@ -65,9 +65,9 @@ function Pagination({ count, currentPage }) {
           width={6}
           height={11}
         />
-        Prev
+        <span className="hidden sm:inline">Prev</span>
       </button>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         {pages.map((pg, i) =>
           pg === "..." ? (
             <span key={`dots-${i}`} className="px-2 text-grey-500">
@@ -83,7 +83,7 @@ function Pagination({ count, currentPage }) {
                 pg === page
                   ? "bg-grey-900 border-grey-900 text-white"
                   : "text-grey-900"
-              } border-beige-500 h-10 w-10 cursor-pointer rounded-lg border`}
+              } h-10 w-10 cursor-pointer rounded-lg border border-beige-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green`}
               style={{ font: "var(--text-preset-4)" }}
             >
               {pg}
@@ -94,10 +94,10 @@ function Pagination({ count, currentPage }) {
       <button
         onClick={nextPage}
         disabled={page >= pageCount}
-        className="border-beige-500 text-grey-900 flex cursor-pointer items-center gap-4 rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-10 min-w-10 cursor-pointer items-center justify-center gap-4 rounded-lg border border-beige-500 px-3 text-grey-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:cursor-not-allowed disabled:opacity-50 sm:px-4"
         style={{ font: "var(--text-preset-4)" }}
       >
-        Next
+        <span className="hidden sm:inline">Next</span>
         <Image
           src="/assets/images/icon-caret-right.svg"
           alt=""
@@ -105,7 +105,7 @@ function Pagination({ count, currentPage }) {
           height={11}
         />
       </button>
-    </>
+    </nav>
   );
 }
 

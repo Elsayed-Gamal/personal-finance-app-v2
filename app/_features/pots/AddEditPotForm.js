@@ -155,7 +155,7 @@ function AddEditPotForm({
       )}
       <button
         disabled={isPending}
-        className="bg-grey-900 w-full cursor-pointer rounded-lg p-4 text-white"
+        className="button-primary w-full p-4"
         style={{ font: "var(--text-preset-4-bold)" }}
       >
         {isPending ? "Saving..." : type === "add" ? "Add Pot" : "Save Changes"}

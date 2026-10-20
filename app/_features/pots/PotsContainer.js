@@ -21,7 +21,7 @@ const itemVariant = {
 function PotsContainer({ pots, themes, balance }) {
   return (
     <motion.div
-      className="grid grid-cols-[repeat(auto-fit,minmax(450px,1fr))] gap-6"
+      className="grid grid-cols-1 gap-6 min-[1120px]:grid-cols-2"
       variants={parentVariant}
       initial="hidden"
       animate="visible"

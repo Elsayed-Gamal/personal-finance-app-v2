@@ -32,14 +32,14 @@ function ConfirmDeleteUser({ userId, userName }) {
           </p>
           <div className="flex flex-col gap-4">
             <button
-              className="bg-red flex-1 cursor-pointer rounded-lg py-5 text-white transition"
+              className="button-danger flex-1 py-5"
               onClick={handleDelete}
               style={{ font: 'var(--text-preset-4-bold)' }}
             >
               Yes, Confirm Deletion
             </button>
             <button
-              className="text-grey-500 flex-1 cursor-pointer rounded-lg bg-transparent transition"
+              className="button-secondary flex-1 border-transparent py-5 text-grey-500"
               onClick={close}
               style={{ font: 'var(--text-preset-4)' }}
             >

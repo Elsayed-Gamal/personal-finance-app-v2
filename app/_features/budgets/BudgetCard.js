@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import BudgetEditor from "./BudgetEditor";
-import { formatCurrency } from "@/app/_utils/helpers";
+import { formatCurrency, normalizeImageSrc } from "@/app/_utils/helpers";
 
 const dateFormatter = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
@@ -105,7 +105,7 @@ export default function BudgetCard({
                 <div className="flex min-w-0 items-center gap-4">
                   {transaction.avatar ? (
                     <Image
-                      src={transaction.avatar}
+                      src={normalizeImageSrc(transaction.avatar)}
                       alt=""
                       width={32}
                       height={32}

@@ -17,7 +17,7 @@ async function ProfilePage() {
     : "?";
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-[1060px] flex-col gap-8">
       {/* Page Header */}
       <div className="flex h-14 items-center">
         <h1 className="text-grey-900" style={{ font: "var(--text-preset-1)" }}>
@@ -37,14 +37,14 @@ async function ProfilePage() {
         >
           {initials}
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="min-w-0 flex flex-col gap-1">
           <p className="text-grey-500" style={{ font: "var(--text-preset-5)" }}>
             Welcome back,
           </p>
-          <p className="text-grey-900" style={{ font: "var(--text-preset-2)" }}>
+          <p className="break-words text-grey-900" style={{ font: "var(--text-preset-2)" }}>
             {user?.name}
           </p>
-          <p className="text-grey-500" style={{ font: "var(--text-preset-5)" }}>
+          <p className="break-all text-grey-500" style={{ font: "var(--text-preset-5)" }}>
             {user?.email}
           </p>
         </div>

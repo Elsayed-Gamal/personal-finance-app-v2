@@ -7,7 +7,7 @@ function PotsHeader({ themes }) {
   return (
     <div className="mb-8 flex h-14 items-center justify-between">
       <h1
-        className="text-gray-900"
+        className="text-grey-900"
         style={{
           font: 'var(--text-preset-1)',
         }}
@@ -17,7 +17,7 @@ function PotsHeader({ themes }) {
       <Modal>
         <Modal.Open opens="create-pot">
           <button
-            className="bg-grey-900 h-13.25 cursor-pointer rounded-lg px-4 py-2 text-white"
+            className="button-primary h-13.25"
             style={{ font: 'var(--text-preset-4-bold)' }}
           >
             + Add New Pot

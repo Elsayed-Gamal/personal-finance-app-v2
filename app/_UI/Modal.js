@@ -113,13 +113,13 @@ function Content({ children, name, closeButtonClassName = "" }) {
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex h-full w-full items-center justify-center bg-black/50 p-4"
+          className="fixed inset-0 z-50 flex min-h-dvh w-full items-center justify-center bg-black/50 p-3 sm:p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="relative max-h-[90dvh] w-full max-w-140 overflow-y-auto rounded-xl bg-white p-6 outline-none sm:p-8"
+            className="relative max-h-[calc(100dvh-24px)] w-full max-w-140 overscroll-contain overflow-y-auto rounded-xl bg-white p-5 outline-none sm:max-h-[90dvh] sm:p-8"
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
@@ -132,7 +132,7 @@ function Content({ children, name, closeButtonClassName = "" }) {
             <button
               type="button"
               aria-label="Close dialog"
-              className={`absolute top-6 right-6 rounded p-1 focus-visible:outline-2 focus-visible:outline-green ${closeButtonClassName}`}
+              className={`absolute top-5 right-5 rounded p-1 focus-visible:outline-2 focus-visible:outline-green sm:top-6 sm:right-6 ${closeButtonClassName}`}
               onClick={close}
             >
               <CloseModalIcon />

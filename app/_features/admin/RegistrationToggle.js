@@ -11,8 +11,8 @@ function RegistrationToggle({ isOpen }) {
   };
 
   return (
-    <div className="rounded-xl bg-white p-8">
-      <div className="flex items-center justify-between gap-4">
+    <section className="rounded-xl bg-white p-5 sm:p-8">
+      <div className="flex flex-col items-stretch justify-between gap-5 sm:flex-row sm:items-center sm:gap-4">
         {/* Left: label + description */}
         <div className="flex flex-col gap-1">
           <h2
@@ -29,7 +29,7 @@ function RegistrationToggle({ isOpen }) {
         </div>
 
         {/* Right: status badge + toggle button */}
-        <div className="flex shrink-0 items-center gap-4">
+        <div className="flex shrink-0 items-center justify-between gap-4 sm:justify-start">
           <span
             className={`inline-block rounded-full px-3 py-1 ${
               isOpen ? 'bg-green/15 text-green' : 'bg-red/15 text-red'
@@ -42,7 +42,7 @@ function RegistrationToggle({ isOpen }) {
           <button
             onClick={handleToggle}
             disabled={isPending}
-            className={`relative inline-flex h-7 w-14 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${
+            className={`relative inline-flex h-7 w-14 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:cursor-not-allowed disabled:opacity-50 ${
               isOpen ? 'bg-green' : 'bg-grey-300'
             }`}
             aria-label="Toggle registration"
@@ -57,7 +57,7 @@ function RegistrationToggle({ isOpen }) {
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

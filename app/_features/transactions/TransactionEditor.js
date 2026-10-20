@@ -8,9 +8,10 @@ import {
   deleteTransaction,
 } from '@/app/_actions/transactionActions';
 import { todayISO } from '@/app/_utils/financialDates';
+import { createUuid } from '@/app/_utils/helpers';
 
 function TransactionForm({ transaction, categories }) {
-  const [id] = useState(() => transaction?.id ?? crypto.randomUUID());
+  const [id] = useState(() => transaction?.id ?? createUuid());
   const [values, setValues] = useState({
     name: transaction?.name ?? '',
     type: transaction?.amount > 0 ? 'income' : 'expense',
@@ -154,7 +155,9 @@ export default function TransactionEditor({
 }) {
   return (
     <Modal>
-      <div className="flex flex-wrap items-center gap-2">
+      <div
+        className={`flex flex-wrap items-center gap-2 ${transaction ? 'w-full justify-end' : ''}`}
+      >
         <Modal.Open opens="transaction-form">
           <button
             type="button"

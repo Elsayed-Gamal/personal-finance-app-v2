@@ -15,9 +15,11 @@ export default async function BudgetsPage({ searchParams }) {
     getBudgetSpending(month),
   ]);
   return (
-    <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-[1060px] flex-col gap-8">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-3xl font-bold">Budgets</h1>
+        <h1 className="text-grey-900" style={{ font: "var(--text-preset-1)" }}>
+          Budgets
+        </h1>
         <BudgetEditor categories={categories} themes={themes} />
       </div>
       {budgets.length === 0 ? (

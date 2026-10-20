@@ -9,7 +9,7 @@ const rows = [
 
 function TotalSummary({ summary }) {
   return (
-    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-1">
+    <div className="grid gap-3 md:grid-cols-2 md:gap-6 xl:grid-cols-1">
       <section className="flex min-h-[118px] items-center gap-5 rounded-xl bg-grey-900 p-6 text-white md:min-h-[190px] md:flex-col md:items-start md:justify-between md:gap-8">
         <RecurringIcon className="shrink-0" />
         <div className="flex flex-col gap-2.5">

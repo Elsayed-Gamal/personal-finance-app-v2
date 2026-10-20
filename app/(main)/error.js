@@ -1,6 +1,6 @@
 'use client';
 
-import { signOut } from 'next-auth/react';
+import { signOutToLogin } from '@/app/_utils/signOutToLogin';
 
 export default function MainError({ reset, error }) {
   return (
@@ -17,7 +17,7 @@ export default function MainError({ reset, error }) {
         <button
           type="button"
           className="button-secondary"
-          onClick={() => signOut()}
+          onClick={signOutToLogin}
         >
           Sign out and sign in again
         </button>

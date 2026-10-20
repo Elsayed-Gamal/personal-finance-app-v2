@@ -11,7 +11,7 @@ function Pot({ pot, themes, balance }) {
   const balanceReady = balance !== null;
   const canDelete = balanceReady || pot.total === 0;
   return (
-    <motion.div className="flex flex-col gap-8 rounded-xl bg-white p-6">
+    <motion.div className="flex flex-col gap-8 rounded-xl bg-white p-5 sm:p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <span
@@ -25,7 +25,7 @@ function Pot({ pot, themes, balance }) {
             {pot.name}
           </h2>
         </div>
-        <Menus.Toggle id={pot.id}>
+        <Menus.Toggle id={pot.id} aria-label={`Manage ${pot.name} pot`}>
           <EllipsisIcon />
         </Menus.Toggle>
       </div>
@@ -74,7 +74,7 @@ function Pot({ pot, themes, balance }) {
             <div
               className={`h-2 rounded-full`}
               style={{
-                width: `${(pot.total / pot.target) * 100}%`,
+                width: `${Math.min(100, Math.max(0, (pot.total / pot.target) * 100))}%`,
                 backgroundColor: pot.theme,
               }}
             ></div>
@@ -100,7 +100,7 @@ function Pot({ pot, themes, balance }) {
           <Modal.Open opens="add-money">
             <button
               disabled={!balanceReady}
-              className="bg-beige-100 text-grey-900 h-13.25 w-[50%] cursor-pointer rounded-lg p-4 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-13.25 w-1/2 cursor-pointer rounded-lg bg-beige-100 p-4 text-grey-900 hover:bg-grey-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:cursor-not-allowed disabled:opacity-50"
               style={{ font: "var(--text-preset-4-bold)" }}
             >
               +Add Money
@@ -113,7 +113,7 @@ function Pot({ pot, themes, balance }) {
           <Modal.Open opens="withdraw-money">
             <button
               disabled={!balanceReady}
-              className="bg-beige-100 text-grey-900 h-13.25 w-[50%] cursor-pointer rounded-lg p-4 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-13.25 w-1/2 cursor-pointer rounded-lg bg-beige-100 p-4 text-grey-900 hover:bg-grey-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:cursor-not-allowed disabled:opacity-50"
               style={{ font: "var(--text-preset-4-bold)" }}
             >
               Withdraw

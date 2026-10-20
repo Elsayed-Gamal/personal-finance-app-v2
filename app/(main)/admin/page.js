@@ -23,7 +23,7 @@ async function AdminPage() {
   ]);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-[1060px] flex-col gap-8">
       <AdminHeader />
       <RegistrationToggle isOpen={registrationOpen} />
       <UsersTable users={users} currentUserId={user.id} />

@@ -6,7 +6,7 @@ async function SignupPage() {
   const registrationOpen = await isRegistrationOpen();
 
   return (
-    <div className="p-8 flex flex-col gap-8 bg-white rounded-xl w-140 mx-auto">
+    <div className="mx-auto flex w-full max-w-140 flex-col gap-8 rounded-xl bg-white p-6 sm:p-8">
       <h1 className="text-grey-900" style={{ font: 'var(--text-preset-1)' }}>
         Sign Up
       </h1>
@@ -50,7 +50,7 @@ async function SignupPage() {
         Already have an account?{' '}
         <Link
           href="/login"
-          className="text-grey-900"
+          className="touch-manipulation rounded text-grey-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
           style={{ font: 'var(--text-preset-4-bold)' }}
         >
           Login

@@ -32,17 +32,17 @@ function UserRow({ user, currentUserId }) {
       transition={{ duration: 0.25 }}
     >
       {/* Avatar + Name */}
-      <td className="py-4 pr-4">
-        <div className="flex items-center gap-3">
+      <td className="min-w-0 py-4 pr-3 sm:pr-4">
+        <div className="flex min-w-0 items-center gap-3">
           <div
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-grey-900 text-white"
             style={{ font: 'var(--text-preset-5-bold)' }}
           >
             {initials}
           </div>
-          <div className="flex flex-col">
+          <div className="flex min-w-0 flex-col">
             <span
-              className="text-grey-900"
+              className="break-words text-grey-900"
               style={{ font: 'var(--text-preset-4-bold)' }}
             >
               {user.name}
@@ -55,12 +55,36 @@ function UserRow({ user, currentUserId }) {
                 </span>
               )}
             </span>
+            <span
+              className="mt-1 break-all text-grey-500 md:hidden"
+              style={{ font: 'var(--text-preset-5)' }}
+            >
+              {user.email}
+            </span>
+            <div className="mt-2 flex flex-wrap items-center gap-2 lg:hidden">
+              <span
+                className={`rounded-full px-2 py-0.5 sm:hidden ${roleBadgeClass[user.role] ?? roleBadgeClass.USER}`}
+                style={{ font: 'var(--text-preset-5-bold)' }}
+              >
+                {user.role}
+              </span>
+              <span
+                className="text-grey-500"
+                style={{ font: 'var(--text-preset-5)' }}
+              >
+                {new Date(user.created_at).toLocaleDateString('en-GB', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                })}
+              </span>
+            </div>
           </div>
         </div>
       </td>
 
       {/* Email */}
-      <td className="py-4 pr-4">
+      <td className="hidden py-4 pr-4 md:table-cell">
         <span
           className="text-grey-500"
           style={{ font: 'var(--text-preset-4)' }}
@@ -70,9 +94,9 @@ function UserRow({ user, currentUserId }) {
       </td>
 
       {/* Role Badge */}
-      <td className="py-4 pr-4">
+      <td className="hidden py-4 pr-4 sm:table-cell">
         <span
-          className={`inline-block rounded-full px-3 py-1 -translate-x-2 ${roleBadgeClass[user.role] ?? roleBadgeClass.USER}`}
+          className={`inline-block rounded-full px-3 py-1 ${roleBadgeClass[user.role] ?? roleBadgeClass.USER}`}
           style={{ font: 'var(--text-preset-5-bold)' }}
         >
           {user.role}
@@ -80,7 +104,7 @@ function UserRow({ user, currentUserId }) {
       </td>
 
       {/* Joined date */}
-      <td className="py-4 pr-4">
+      <td className="hidden py-4 pr-4 lg:table-cell">
         <span
           className="text-grey-500"
           style={{ font: 'var(--text-preset-5)' }}
@@ -94,8 +118,8 @@ function UserRow({ user, currentUserId }) {
       </td>
 
       {/* Actions */}
-      <td className="py-4 text-right">
-        <Menus.Toggle id={`user-${user.id}`}>
+      <td className="w-px py-4 text-right align-middle">
+        <Menus.Toggle id={`user-${user.id}`} aria-label={`Manage ${user.name}`}>
           <EllipsisIcon />
         </Menus.Toggle>
 

@@ -1,11 +1,11 @@
 'use client';
 
-import { useContext, useActionState, useTransition } from 'react';
+import { useContext, useActionState } from 'react';
 import { ModalContext } from '@/app/_UI/Modal';
 import { adminCreate, adminEdit } from '@/app/_actions/adminActions';
 import Loading from '@/app/_UI/Loading';
 
-function AddEditUserForm({ type, user, startTransition }) {
+function AddEditUserForm({ type, user }) {
   const { close } = useContext(ModalContext);
 
   const boundAction =
@@ -23,7 +23,7 @@ function AddEditUserForm({ type, user, startTransition }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <h2 className="text-grey-900" style={{ font: 'var(--text-preset-1)' }}>
+      <h2 className="pr-10 text-2xl leading-[1.2] font-bold text-grey-900 sm:text-[32px]">
         {type === 'edit' ? 'Edit User' : 'Add New User'}
       </h2>
       <p className="text-grey-500" style={{ font: 'var(--text-preset-4)' }}>
@@ -55,6 +55,8 @@ function AddEditUserForm({ type, user, startTransition }) {
               placeholder="e.g. John Doe"
               defaultValue={user?.name ?? ''}
               maxLength={50}
+              autoComplete="name"
+              required
             />
             {state?.errors?.name && (
               <p className="text-red" style={{ font: 'var(--text-preset-5)' }}>
@@ -78,6 +80,8 @@ function AddEditUserForm({ type, user, startTransition }) {
               className="form-input w-full"
               placeholder="e.g. john@example.com"
               defaultValue={user?.email ?? ''}
+              autoComplete="email"
+              required
             />
             {state?.errors?.email && (
               <p className="text-red" style={{ font: 'var(--text-preset-5)' }}>
@@ -102,6 +106,8 @@ function AddEditUserForm({ type, user, startTransition }) {
               placeholder={
                 type === 'edit' ? 'Leave blank to keep current' : '••••••••'
               }
+              autoComplete="new-password"
+              required={type !== 'edit'}
             />
             {(state?.errors?.password || state?.errors?.newPassword) && (
               <p className="text-red" style={{ font: 'var(--text-preset-5)' }}>
@@ -122,7 +128,7 @@ function AddEditUserForm({ type, user, startTransition }) {
               id="user-role"
               name="role"
               className="form-input w-full bg-white"
-              defaultValue={user?.role ?? 'user'}
+              defaultValue={user?.role ?? 'USER'}
             >
               <option value="USER">User</option>
               <option value="ADMIN">Admin</option>
@@ -143,14 +149,14 @@ function AddEditUserForm({ type, user, startTransition }) {
           <div className="flex flex-col gap-4 pt-2">
             <button
               type="submit"
-              className="bg-grey-900 flex-1 cursor-pointer rounded-lg py-4 text-white transition"
+              className="button-primary flex-1 py-4"
               style={{ font: 'var(--text-preset-4-bold)' }}
             >
               {type === 'edit' ? 'Save Changes' : 'Create User'}
             </button>
             <button
               type="button"
-              className="text-grey-500 flex-1 cursor-pointer rounded-lg bg-transparent transition"
+              className="button-secondary flex-1 border-transparent py-4 text-grey-500"
               onClick={close}
               style={{ font: 'var(--text-preset-4)' }}
             >

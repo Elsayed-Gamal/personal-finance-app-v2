@@ -54,7 +54,7 @@ function UpdateNameForm({ currentName }) {
             defaultValue={currentName}
             maxLength={50}
             disabled={isPending}
-            className="w-full border border-beige-500 rounded-lg px-3 py-3 focus:outline-none text-grey-900 disabled:opacity-50"
+            className="w-full rounded-lg border border-beige-500 px-3 py-3 text-grey-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green disabled:opacity-50"
             style={{ font: 'var(--text-preset-4)' }}
           />
           {state?.errors?.name && (
@@ -76,7 +76,7 @@ function UpdateNameForm({ currentName }) {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full p-4 bg-grey-900 text-white rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="button-primary w-full p-4"
           style={{ font: 'var(--text-preset-4-bold)' }}
         >
           {isPending ? 'Saving...' : 'Save Changes'}

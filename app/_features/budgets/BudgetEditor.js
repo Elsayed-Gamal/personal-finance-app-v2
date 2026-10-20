@@ -10,9 +10,10 @@ import {
 } from "@/app/_actions/budgetActions";
 import Menus from "@/app/_UI/Menus";
 import EllipsisIcon from "@/app/_UI/icons/EllipsisIcon";
+import { createUuid } from "@/app/_utils/helpers";
 
 function BudgetForm({ budget, categories, themes }) {
-  const [id] = useState(() => budget?.id ?? crypto.randomUUID());
+  const [id] = useState(() => budget?.id ?? createUuid());
   const [category, setCategory] = useState(
     budget?.category_id ?? categories[0]?.id ?? "",
   );
@@ -97,7 +98,7 @@ function BudgetForm({ budget, categories, themes }) {
             </span>
             <input
               id={`budget-maximum-${id}`}
-              className="min-w-0 flex-1 appearance-none bg-transparent text-sm text-grey-900 outline-none placeholder:text-beige-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="min-w-0 flex-1 appearance-none bg-transparent text-sm text-grey-900 outline-none placeholder:text-grey-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               name="maximum"
               type="number"
               required
@@ -197,7 +198,7 @@ export default function BudgetEditor({ budget, categories, themes }) {
             <EllipsisIcon />
             <span className="sr-only">Manage {budget.name} budget</span>
           </Menus.Toggle>
-          <Menus.List id={budget.id}>
+          <Menus.List id={budget.id} className="w-40">
             <Modal.Open opens="budget-form">
               <Menus.Button>Edit Budget</Menus.Button>
             </Modal.Open>

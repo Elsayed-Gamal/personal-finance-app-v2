@@ -15,10 +15,10 @@ async function TransactionsPage({ searchParams }) {
   ]);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-[1060px] flex-col gap-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1
-          className="text-gray-900"
+          className="text-grey-900"
           style={{
             font: 'var(--text-preset-1)',
           }}
@@ -39,7 +39,7 @@ async function TransactionsPage({ searchParams }) {
           contact the administrator before adding, editing or deleting them.
         </p>
       )}
-      <div className="rounded-xl bg-white p-8">
+      <div className="rounded-xl bg-white p-5 sm:p-8">
         <NavigationProvider>
           <SearchBar categories={categories} />
 

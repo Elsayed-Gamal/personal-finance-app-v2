@@ -5,17 +5,19 @@ import AddEditUser from './AddEditUser';
 
 function AdminHeader() {
   return (
-    <div className="mb-8 flex h-14 items-center justify-between">
-      <h1 className="text-grey-900" style={{ font: 'var(--text-preset-1)' }}>
+    <div className="flex items-center justify-between gap-3">
+      <h1 className="text-2xl leading-[1.2] font-bold text-grey-900 sm:text-[32px]">
         Admin Panel
       </h1>
       <Modal>
         <Modal.Open opens="create-user">
           <button
-            className="bg-grey-900 h-13.25 cursor-pointer rounded-lg px-4 py-2 text-white"
+            type="button"
+            className="button-primary h-[53px] shrink-0 px-3 sm:px-4"
             style={{ font: 'var(--text-preset-4-bold)' }}
           >
-            + Add New User
+            <span className="sm:hidden">+ Add User</span>
+            <span className="hidden sm:inline">+ Add New User</span>
           </button>
         </Modal.Open>
         <Modal.Content name="create-user">

@@ -12,7 +12,7 @@ async function PotsPage() {
   ]);
 
   return (
-    <div>
+    <div className="mx-auto w-full max-w-[1060px]">
       <PotsHeader themes={themes} />
       {balance === null && (
         <p
@@ -25,7 +25,16 @@ async function PotsPage() {
           help.
         </p>
       )}
-      <PotsContainer pots={pots} themes={themes} balance={balance} />
+      {pots.length === 0 ? (
+        <section className="rounded-xl bg-white p-10 text-center">
+          <h2 className="text-xl font-bold">Start saving toward a goal</h2>
+          <p className="mt-3 text-grey-500">
+            Create your first pot to track progress for something important.
+          </p>
+        </section>
+      ) : (
+        <PotsContainer pots={pots} themes={themes} balance={balance} />
+      )}
     </div>
   );
 }
