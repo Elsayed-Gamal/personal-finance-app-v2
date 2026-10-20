@@ -124,6 +124,7 @@ export async function getRecurringBills() {
     .select("id, name, avatar, amount, date")
     .eq("user_id", user.id)
     .eq("recurring", true)
+    .lt("amount", 0)
     .order("name", { ascending: true })
     .order("date", { ascending: false })
     .order("id", { ascending: false });

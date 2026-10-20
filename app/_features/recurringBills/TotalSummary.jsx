@@ -1,120 +1,51 @@
-'use client';
-
 import RecurringIcon from '@/app/_UI/icons/RecurringIcon';
-import Table from '@/app/_UI/Table';
 import { formatCurrency } from '@/app/_utils/helpers';
 
-function TotalSummary() {
+const rows = [
+  ['Paid Bills', 'paid'],
+  ['Total Upcoming', 'upcoming'],
+  ['Due Soon', 'dueSoon'],
+];
+
+function TotalSummary({ summary }) {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="bg-grey-900 flex flex-col gap-8 rounded-xl p-6 text-white">
-        <RecurringIcon />
-        <div className="flex flex-col gap-2.75">
-          <p
-            style={{
-              font: 'var(--text-preset-4)',
-            }}
-          >
-            Total Bills
-          </p>
-          <h2
-            style={{
-              font: 'var(--text-preset-1)',
-            }}
-          >
-            {formatCurrency(384.98)}
+    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-1">
+      <section className="flex min-h-[118px] items-center gap-5 rounded-xl bg-grey-900 p-6 text-white md:min-h-[190px] md:flex-col md:items-start md:justify-between md:gap-8">
+        <RecurringIcon className="shrink-0" />
+        <div className="flex flex-col gap-2.5">
+          <p style={{ font: 'var(--text-preset-4)' }}>Total Bills</p>
+          <h2 style={{ font: 'var(--text-preset-1)' }}>
+            {formatCurrency(summary.total.amount)}
           </h2>
         </div>
-      </div>
-      <div className="flex flex-col gap-5 rounded-xl bg-white p-5">
+      </section>
+
+      <section className="rounded-xl bg-white p-5">
         <h3
-          className="text-grey-900"
-          style={{
-            font: 'var(--text-preset-3)',
-          }}
+          className="mb-5 text-grey-900"
+          style={{ font: 'var(--text-preset-3)' }}
         >
           Summary
         </h3>
-        <Table columns="1fr 1fr">
-          <Table.Body>
-            <Table.Row
-              styles={{
-                paddingTop: '0',
-                paddingBottom: '16px',
-                paddingLeft: '0',
-                paddingRight: '0',
-              }}
+        <dl>
+          {rows.map(([label, key]) => (
+            <div
+              key={key}
+              className={`flex items-center justify-between border-b border-grey-100 py-4 first:pt-0 last:border-0 last:pb-0 ${key === 'dueSoon' ? 'text-red' : ''}`}
             >
-              <p
-                className="text-grey-500"
-                style={{
-                  font: 'var(--text-preset-5)',
-                }}
+              <dt
+                className={key === 'dueSoon' ? '' : 'text-grey-500'}
+                style={{ font: 'var(--text-preset-5)' }}
               >
-                Paid Bills
-              </p>
-              <p
-                className="text-grey-900 ml-auto"
-                style={{
-                  font: 'var(--text-preset-5-bold)',
-                }}
-              >
-                4 ({formatCurrency(190)})
-              </p>
-            </Table.Row>
-            <Table.Row
-              styles={{
-                paddingTop: '16px',
-                paddingBottom: '16px',
-                paddingLeft: '0',
-                paddingRight: '0',
-              }}
-            >
-              <p
-                className="text-grey-500"
-                style={{
-                  font: 'var(--text-preset-5)',
-                }}
-              >
-                Total Upcoming
-              </p>
-              <p
-                className="text-grey-900 ml-auto"
-                style={{
-                  font: 'var(--text-preset-5-bold)',
-                }}
-              >
-                4 ({formatCurrency(194.98)})
-              </p>
-            </Table.Row>
-            <Table.Row
-              styles={{
-                paddingTop: '16px',
-                paddingBottom: '0',
-                paddingLeft: '0',
-                paddingRight: '0',
-                color: 'var(--color-red)',
-              }}
-            >
-              <p
-                style={{
-                  font: 'var(--text-preset-5)',
-                }}
-              >
-                Due Soon
-              </p>
-              <p
-                className="ml-auto"
-                style={{
-                  font: 'var(--text-preset-5-bold)',
-                }}
-              >
-                2 ({formatCurrency(59.98)})
-              </p>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-      </div>
+                {label}
+              </dt>
+              <dd style={{ font: 'var(--text-preset-5-bold)' }}>
+                {summary[key].count} ({formatCurrency(summary[key].amount)})
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
     </div>
   );
 }
